@@ -112,9 +112,6 @@ class SimpleTest(unittest.TestCase):
                                               "expeccodeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
-        print(df1_list)
-        print("****************")
-        print(df2_list)
         self.assertEqual(df1_list, df2_list)
 
     def test_invalid_path(self):
