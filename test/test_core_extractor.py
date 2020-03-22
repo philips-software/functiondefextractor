@@ -12,6 +12,7 @@ from functiondefextractor.core_extractor import extractor
 class SimpleTest(unittest.TestCase):
     """Class to run unit test cases on the function definition extractor"""
     src_files = os.path.join(TestResource.tst_resource_folder, "test_repo", "src")
+    file_path = (os.path.join(os.path.dirname(__file__), os.pardir)).split("test")[0]
 
     def test_get_file_names(self):
         """Function to test get_file_names method"""
@@ -57,8 +58,7 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_ft(self):
         """Function to test the complete end to end process of function definition extractor (False True)"""
-        file_path = (os.path.join(os.path.dirname(__file__), os.pardir)).split("test")[0]
-        dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "False", "True",
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "False", "True",
                               None, None)
         self.__write_xlsx(dataframe, "expeccodeextractor_F_T")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
@@ -69,7 +69,7 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_tf(self):
         """Function to test the complete end to end process of function definition extractor (True False)"""
-        dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "False",
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "True", "False",
                               None, None)
         # print(dataframe1)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_F")
@@ -82,7 +82,7 @@ class SimpleTest(unittest.TestCase):
     def test_process_ttad(self):
         """Function to test the complete end to end process of function definition extractor (True True Annotation
         delta)"""
-        dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "True", "True",
                               "@Test", "5")
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A_D")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
@@ -93,7 +93,7 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_tta(self):
         """Function to test the complete end to end process of function definition extractor (True False annotation)"""
-        dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "True", "True",
                               "@Test", None)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
@@ -104,7 +104,7 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_tt(self):
         """Function to test the complete end to end process of function definition extractor (True True)"""
-        dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "True", "True",
                               None, None)
 
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T")
