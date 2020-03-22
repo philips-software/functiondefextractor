@@ -55,8 +55,8 @@ class SimpleTest(unittest.TestCase):
         data_f.to_excel(writer, sheet_name=name)
         writer.save()
 
-    def test_process(self):
-        """Function to test the complete end to end process of function definition extractor"""
+    def test_process_ft(self):
+        """Function to test the complete end to end process of function definition extractor (False True)"""
         file_path = (os.path.join(os.path.dirname(__file__), os.pardir)).split("test")[0]
         dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "False", "True",
                               None, None)
@@ -67,6 +67,8 @@ class SimpleTest(unittest.TestCase):
                                               "codeextractor_F_T.xlsx")).values.tolist()
         self.assertEqual(df1_list, df2_list)
 
+    def test_process_tf(self):
+        """Function to test the complete end to end process of function definition extractor (True False)"""
         dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "False",
                               None, None)
         # print(dataframe1)
@@ -77,6 +79,9 @@ class SimpleTest(unittest.TestCase):
                                               "codeextractor_T_F.xlsx")).values.tolist()
         self.assertEqual(df1_list, df2_list)
 
+    def test_process_ttad(self):
+        """Function to test the complete end to end process of function definition extractor (True True Annotation
+        delta)"""
         dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
                               "@Test", "5")
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A_D")
@@ -86,6 +91,8 @@ class SimpleTest(unittest.TestCase):
                                               "codeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID').values.tolist()
         self.assertEqual(df1_list, df2_list)
 
+    def test_process_tta(self):
+        """Function to test the complete end to end process of function definition extractor (True False annotation)"""
         dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
                               "@Test", None)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A")
@@ -95,6 +102,8 @@ class SimpleTest(unittest.TestCase):
                                               "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
         self.assertEqual(df1_list, df2_list)
 
+    def test_process_tt(self):
+        """Function to test the complete end to end process of function definition extractor (True True)"""
         dataframe = extractor((os.path.join(file_path, "test_resource", "test_repo")), "True", "True",
                               None, None)
 
