@@ -6,14 +6,10 @@
 Function Definition Extractor
 =============================
 
-What is the project intented to solve?
+What is the project intended to solve?
 -------------------------------------
 Project will help to extract the function definitions from source or test code and report the extracted output
  in a data frame which can be further used for Similarity processing, Review, etc...
-
-Technology stack
----------------
-Python with few python packages mentioned in the [INSTALL.md](INSTALL.md)
 
 Dependencies
 ------------
