@@ -71,6 +71,7 @@ class ParserAndLogTest(unittest.TestCase):
         if os.path.exists(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt")):
             os.remove(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt"))
 
+    @unittest.skipIf("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", "Skipping this test on Travis CI.")
     def test_validate_inputs(self):
         """Test function to test the validate_inputs function"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",

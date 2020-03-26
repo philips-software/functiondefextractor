@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/bkk003/FunctionDefExtractor.svg?branch=master)](https://travis-ci.com/bkk003/FunctionDefExtractor)
+[![Build Status](https://travis-ci.com/philips-software/functiondefextractor.svg?branch=master)](https://travis-ci.com/philips-software/functiondefextractor)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![codecov](https://codecov.io/gh/bkk003/FunctionDefExtractor/branch/master/graph/badge.svg)](https://codecov.io/gh/bkk003/FunctionDefExtractor)
+[![codecov](https://codecov.io/gh/philips-software/functiondefextractor/branch/master/graph/badge.svg)](https://codecov.io/gh/philips-software/functiondefextractor)
 
 
 Function Definition Extractor
