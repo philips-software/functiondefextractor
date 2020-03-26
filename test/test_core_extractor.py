@@ -3,10 +3,10 @@ import unittest
 import os
 from test.test_resource import TestResource
 import pandas as pd
-from functiondefextractor.core_extractor import get_file_names
-from functiondefextractor.core_extractor import get_function_names
-from functiondefextractor.core_extractor import get_func_body
-from functiondefextractor.core_extractor import extractor
+from core_extractor import get_file_names
+from core_extractor import get_function_names
+from core_extractor import get_func_body
+from core_extractor import extractor
 
 
 class SimpleTest(unittest.TestCase):

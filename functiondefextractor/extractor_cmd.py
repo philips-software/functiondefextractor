@@ -4,11 +4,7 @@ import subprocess
 import sys
 import argparse
 import pandas as pd
-# sys.path.append(os.path.abspath(os.path.join
-#                                 (os.path.dirname(__file__), os.pardir
-#                                  )))
-# from function_def_extractor import function_def_extractor
-from functiondefextractor.core_extractor import extractor
+from core_extractor import extractor
 
 
 def create_parser(args):

@@ -1,6 +1,6 @@
 Enter Valid Path
-usage: function_def_extractor_cmd.py [-h] [--path --p] [--code --c]
-                                     [--test --t] [--annot --a] [--delta --d]
+usage: extractor_cmd.py [-h] [--path --p] [--code --c] [--test --t]
+                        [--annot --a] [--delta --d]
 
 Function Definition Extractor
 
