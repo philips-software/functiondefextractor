@@ -5,6 +5,7 @@ python:
 cache: pip
 install:
   - pip3 install -r requirements.txt
+  - nvm install 10
   - npm install -g jscpd
   - sudo apt-get install ctags
   - export PATH="$PATH:/usr/bin/ctags"
