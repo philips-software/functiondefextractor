@@ -465,8 +465,3 @@ def extractor(path_loc, annot=None, delta=None):
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
     return get_final_dataframe(delta, code_list)
-
-
-# x = extractor(r"C:\Users\320074769\Downloads\python_guardrails")
-# print(x)
-# x.to_csv('python_ann_extract.csv', index=True, header=True)
