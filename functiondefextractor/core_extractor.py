@@ -231,7 +231,7 @@ def process_py_methods(file_name, line_numbers, line_data):
     for i, _ in enumerate(line_numbers):
         start = line_numbers[i]
         stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
-        data.append("\n".join(line_data[start - 1:stop]))
+        data.append(os.linesep.join(line_data[start - 1:stop]))
         data_func_name.append(
             str(os.path.basename(file_name)) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:
@@ -283,7 +283,7 @@ def clean_py_methods(data_body):
         @return
         This function returns python function/method definitions in a organized format"""
     for j, _ in enumerate(data_body):
-        data_list = list(str(data_body[j]).split('\n'))
+        data_list = list(str(data_body[j]).split(os.linesep))
         count = len(data_list[0]) - len(data_list[0].lstrip())
         i = 0
         for i, _ in enumerate(data_list):
