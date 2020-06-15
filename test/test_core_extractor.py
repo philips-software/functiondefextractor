@@ -81,8 +81,8 @@ class SimpleTest(unittest.TestCase):
                                               "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
         print(str(df1_list))
         print("****************")
-        print(str(df2_list).replace("\r", ""))
-        self.assertEqual(str(df1_list), str(df2_list).replace("\r", ""))
+        print(str(df2_list).replace(os.linesep, ""))
+        self.assertEqual(str(df1_list).replace(os.linesep, ""), str(df2_list).replace(os.linesep, ""))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
