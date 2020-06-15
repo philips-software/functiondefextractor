@@ -79,7 +79,7 @@ class SimpleTest(unittest.TestCase):
                                               "expeccodeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(str(df1_list).rstrip("\n"), str(df2_list).rstrip("\n"))
+        self.assertEqual(str(df1_list).rstrip(), str(df2_list).rstrip())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
