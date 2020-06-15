@@ -290,7 +290,7 @@ def clean_py_methods(data_body):
             if i == len(data_list) - 1 or len(data_list[i + 1]) - len(data_list[i + 1].lstrip()) <= count:
                 break
         del data_list[i + 1:]
-        data_body[j] = str("\n".join(data_list))
+        data_body[j] = str(os.linesep.join(data_list))
     return data_body
 
 
