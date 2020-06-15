@@ -51,7 +51,7 @@ def process_function_names(func_data, find):
         This function returns list of function names and line numbers"""
     process = str(func_data.stdout.read(), 'utf-8')
     process_list = re.findall(r'\w+', process)
-    val = [index for index, value in enumerate(process_list) if
+    val = [index for index, _ in enumerate(process_list) if
            process_list[index - 1] in find and process_list[index].isdigit()]
     function_list = get_sorted_func_list(process_list, val)
     line_numbers = get_func_line_num_list(process_list, val)
@@ -308,18 +308,6 @@ def filter_files(list_files):
             if extension[1] in ext:
                 local_files.append(files)
     return local_files
-
-
-def __write_xlsx(data_f, name):
-    """ Function which write the dataframe to xlsx
-    @parameters
-    data_f: content in dataframe format
-    name: File name to name the xlsx file generated"""
-    curr_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(curr_path, name)
-    writer = pd.ExcelWriter('%s.xlsx' % file_path, engine='xlsxwriter')
-    data_f.to_excel(writer, sheet_name=name)
-    writer.save()
 
 
 def get_delta_lines(file_name, annot, delta):
