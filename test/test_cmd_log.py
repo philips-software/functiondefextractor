@@ -25,22 +25,6 @@ class ParserAndLogTest(unittest.TestCase):
         parsed = check_create_parser("--p", "path_test")
         self.assertEqual(parsed.path, "path_test")
 
-    # def test_src_code(self):
-    #     """ Function to test the parse source code variable in the command line
-    #             correct and incorrect """
-    #     with self.assertRaises(SystemExit):
-    #         check_create_parser("-c", "source_code")
-    #     parsed = check_create_parser("--c", "source_code")
-    #     self.assertEqual(parsed.code, "source_code")
-    #
-    # def test_tst_code(self):
-    #     """ Function to test the parse test code variable in the command line
-    #             correct and incorrect """
-    #     with self.assertRaises(SystemExit):
-    #         check_create_parser("-t", "test_code")
-    #     parsed = check_create_parser("--t", "test_code")
-    #     self.assertEqual(parsed.test, "test_code")
-
     def test_annot_condition(self):
         """ Function to test the annotation condition variable in the command line """
         with self.assertRaises(SystemExit):
