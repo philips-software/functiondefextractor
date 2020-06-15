@@ -105,7 +105,8 @@ class SimpleTest(unittest.TestCase):
         print(str(df1_list).rstrip())
         print("****************")
         print(str(df2_list).replace("\r\n", "\n").rstrip())
-        self.assertEqual(str(df1_list).replace("\\r\\n", "\\n").rstrip(), str(df2_list).replace("\\r\\n", "\\n").rstrip())
+        self.assertEqual(str(df1_list).replace("\\r\\n", "\\n").rstrip(),
+                         str(df2_list).replace("\\r\\n", "\\n").rstrip())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T.xlsx"))
 
     def test_invalid_path(self):
