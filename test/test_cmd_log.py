@@ -46,7 +46,7 @@ class ParserAndLogTest(unittest.TestCase):
         cmd = 'python %s --h' % script
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"), "w")
-        subprocess.Popen(cmd, stdout=tmpfile, shell=True).communicate()[0]
+        subprocess.call(cmd, stdout=tmpfile, shell=True)
         tmpfile.close()
         output.close()
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"),
@@ -55,7 +55,6 @@ class ParserAndLogTest(unittest.TestCase):
         if os.path.exists(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt")):
             os.remove(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"))
 
-    @unittest.skipIf("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", "Skipping this test on Travis CI.")
     def test_validate_inputs(self):
         """Test function to test the validate_inputs function"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
@@ -63,7 +62,7 @@ class ParserAndLogTest(unittest.TestCase):
         cmd = 'python %s --p %s' %(script, os.path.join(TestResource.tst_resource_folder, "wrong"))
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"), "w")
-        subprocess.Popen(cmd, stdout=tmpfile, shell=True).communicate()[0]
+        subprocess.call(cmd, stdout=tmpfile, shell=True)
         tmpfile.close()
         output.close()
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"),
