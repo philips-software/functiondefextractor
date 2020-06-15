@@ -25,21 +25,21 @@ class ParserAndLogTest(unittest.TestCase):
         parsed = check_create_parser("--p", "path_test")
         self.assertEqual(parsed.path, "path_test")
 
-    def test_src_code(self):
-        """ Function to test the parse source code variable in the command line
-                correct and incorrect """
-        with self.assertRaises(SystemExit):
-            check_create_parser("-c", "source_code")
-        parsed = check_create_parser("--c", "source_code")
-        self.assertEqual(parsed.code, "source_code")
-
-    def test_tst_code(self):
-        """ Function to test the parse test code variable in the command line
-                correct and incorrect """
-        with self.assertRaises(SystemExit):
-            check_create_parser("-t", "test_code")
-        parsed = check_create_parser("--t", "test_code")
-        self.assertEqual(parsed.test, "test_code")
+    # def test_src_code(self):
+    #     """ Function to test the parse source code variable in the command line
+    #             correct and incorrect """
+    #     with self.assertRaises(SystemExit):
+    #         check_create_parser("-c", "source_code")
+    #     parsed = check_create_parser("--c", "source_code")
+    #     self.assertEqual(parsed.code, "source_code")
+    #
+    # def test_tst_code(self):
+    #     """ Function to test the parse test code variable in the command line
+    #             correct and incorrect """
+    #     with self.assertRaises(SystemExit):
+    #         check_create_parser("-t", "test_code")
+    #     parsed = check_create_parser("--t", "test_code")
+    #     self.assertEqual(parsed.test, "test_code")
 
     def test_annot_condition(self):
         """ Function to test the annotation condition variable in the command line """
@@ -68,8 +68,8 @@ class ParserAndLogTest(unittest.TestCase):
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"),
                                             os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"))),
                          "Help option validated")
-        if os.path.exists(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt")):
-            os.remove(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt"))
+        if os.path.exists(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt")):
+            os.remove(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"))
 
     @unittest.skipIf("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", "Skipping this test on Travis CI.")
     def test_validate_inputs(self):
@@ -85,8 +85,8 @@ class ParserAndLogTest(unittest.TestCase):
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"),
                                             os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"))),
                          "validate_inputs function validated")
-        if os.path.exists(os.path.join(os.getcwd(), "test_resource", "tmp_validate.txt")):
-            os.remove(os.path.join(os.getcwd(), "test_resource", "tmp_validate.txt"))
+        if os.path.exists(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt")):
+            os.remove(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"))
 
 
 if __name__ == '__main__':

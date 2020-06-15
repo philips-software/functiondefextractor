@@ -1,13 +1,10 @@
 Enter Valid Path
-usage: extractor_cmd.py [-h] [--path --p] [--code --c] [--test --t]
-                        [--annot --a] [--delta --d]
+usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
 
 Function Definition Extractor
 
 optional arguments:
   -h, --help   show this help message and exit
   --path --p   the Input folder path
-  --code --c   True/False for source code to be processed?
-  --test --t   True/False for test code to be processed?
   --annot --a  Annotation condition to get function/method definitions
   --delta --d  Required number of lines at annotated method

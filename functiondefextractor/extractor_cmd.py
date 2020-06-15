@@ -19,18 +19,6 @@ def create_parser(args):
                              type=str,
                              help='the Input folder path')
 
-    func_parser.add_argument('--code',
-                             metavar='--c',
-                             type=str,
-                             default="true",
-                             help='True/False for source code to be processed?')
-
-    func_parser.add_argument('--test',
-                             metavar='--t',
-                             type=str,
-                             default="true",
-                             help='True/False for test code to be processed?')
-
     func_parser.add_argument('--annot',
                              metavar='--a',
                              type=str,
@@ -64,7 +52,7 @@ if __name__ == '__main__':
     ARGS = create_parser(sys.argv[1:])
     validate_inputs(ARGS.path)
     # Process the similarity with inputs provided
-    DATA_FR = extractor(ARGS.path, ARGS.code, ARGS.test, ARGS.annot, ARGS.delta)
+    DATA_FR = extractor(ARGS.path, ARGS.annot, ARGS.delta)
     WRITER = pd.ExcelWriter('%s.xlsx' % os.path.join(ARGS.path, "funcDefExtractResult"), engine='xlsxwriter')
     DATA_FR.to_excel(WRITER, sheet_name="funcDefExtractResult")
     WRITER.save()
