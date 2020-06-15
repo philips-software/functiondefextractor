@@ -87,10 +87,10 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "@Test", None)
         self.__write_xlsx(dataframe, "expeccodeextractor_annot")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "expeccodeextractor_annot.xlsx")).sort_values('Uniq ID').values.tolist()
+                                              "expeccodeextractor_annot.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "codeextractor_annot.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(df1_list, df2_list)
+                                              "codeextractor_annot.xlsx")).sort_values('Uniq ID')
+        self.assertTrue(df1_list["Uniq ID"].equals(df2_list["Uniq ID"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_annot.xlsx"))
 
     def test_process_python_test_extract(self):
