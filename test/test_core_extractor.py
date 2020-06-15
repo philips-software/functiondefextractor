@@ -79,7 +79,10 @@ class SimpleTest(unittest.TestCase):
                                               "expeccodeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(str(df1_list), str(df2_list).replace("\r\n", "\n"))
+        print(str(df1_list))
+        print("****************")
+        print(str(df2_list))
+        self.assertEqual(str(df1_list), str(df2_list))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
@@ -96,17 +99,12 @@ class SimpleTest(unittest.TestCase):
     def test_process_python_test_extract(self):
         """Function to test the complete end to end process of function definition extractor (True True)"""
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "test_", None)
-
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "expeccodeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
-        print(str(df1_list).rstrip())
-        print("****************")
-        print(str(df2_list).replace("\r\n", "\n").rstrip())
-        self.assertEqual(str(df1_list).replace("\\r\\n", "\\n").rstrip(),
-                         str(df2_list).replace("\\r\\n", "\\n").rstrip())
+        self.assertEqual(str(df1_list), str(df2_list))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T.xlsx"))
 
     def test_invalid_path(self):
