@@ -79,7 +79,7 @@ class SimpleTest(unittest.TestCase):
                                               "expeccodeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertTrue(str(df1_list).rstrip() in str(df2_list).rstrip())
+        self.assertEqual(str(df1_list), str(df2_list).replace("\r\n", "\n"))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
@@ -102,7 +102,7 @@ class SimpleTest(unittest.TestCase):
                                               "expeccodeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(df1_list, df2_list)
+        self.assertEqual(str(df1_list).strip(), str(df2_list).replace("\r\n", "\n").strip())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T.xlsx"))
 
     def test_invalid_path(self):
