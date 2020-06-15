@@ -43,7 +43,7 @@ def validate_inputs(arg_path):
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))
         cmd = 'python %s --h' % script
-        subprocess.call(cmd)
+        subprocess.call(cmd, shell=True)
         raise SystemExit
 
 
