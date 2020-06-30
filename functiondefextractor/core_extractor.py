@@ -6,7 +6,7 @@ import sys
 import time
 
 import pandas as pd
-from . import extractor_log as cl
+import extractor_log as cl
 
 LOG = cl.get_logger()
 DELTA_BODY = []
