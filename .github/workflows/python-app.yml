@@ -27,9 +27,9 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Aspell install
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install --assume-yes aspell aspell-en
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install --assume-yes aspell aspell-en
     - name: npm install
       run: |
         sudo npm install
