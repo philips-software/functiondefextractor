@@ -1,10 +1,14 @@
 Enter Valid Path
 usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
+                        [--functionstartwith --f]
 
 Function Definition Extractor
 
 optional arguments:
-  -h, --help   show this help message and exit
-  --path --p   the Input folder path
-  --annot --a  Annotation condition to get function/method definitions
-  --delta --d  Required number of lines at annotated method
+  -h, --help            show this help message and exit
+  --path --p            the Input folder path
+  --annot --a           Annotation condition to get function/method
+                        definitions
+  --delta --d           Required number of lines at annotated method
+  --functionstartwith --f
+                        functions starting with given key word

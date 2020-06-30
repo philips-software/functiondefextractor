@@ -1,5 +1,5 @@
 """ This file does the  test of the "Text similarity processor
-logging and commandline """
+logging and command line """
 
 import unittest
 import os
@@ -10,7 +10,7 @@ from extractor_cmd import create_parser
 
 
 def check_create_parser(option, value):
-    """ create a parser for commandline input and return handle"""
+    """ create a parser for command line input and return handle"""
     return create_parser([option, value])
 
 
@@ -32,15 +32,22 @@ class ParserAndLogTest(unittest.TestCase):
         parsed = check_create_parser("--a", "annot_condition")
         self.assertEqual(parsed.annot, "annot_condition")
 
-    def test_delts(self):
+    def test_delta(self):
         """ Function to test the annotation condition variable in the command line """
         with self.assertRaises(SystemExit):
             check_create_parser("-d", "delta_value")
         parsed = check_create_parser("--d", "delta_value")
         self.assertEqual(parsed.delta, "delta_value")
 
+    def test_func_start_with(self):
+        """ Function to test the function start with condition in the command line """
+        with self.assertRaises(SystemExit):
+            check_create_parser("-f", "func_start_with")
+        parsed = check_create_parser("--p", "func_start_with")
+        self.assertEqual(parsed.path, "func_start_with")
+
     def test_from_command_help(self):
-        """Test function to test the commandline help option"""
+        """Test function to test the command line help option"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
                                               "extractor_cmd.py"))
         cmd = 'python %s --h' % script

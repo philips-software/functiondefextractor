@@ -1,14 +1,16 @@
 """ File provide command line interface for the text similarity index processor """
+import datetime
 import os
 import subprocess
 import sys
 import argparse
-import pandas as pd
+import time
+
 from core_extractor import extractor
 
 
 def create_parser(args):
-    """ Function which add the command line arguments required for the commandline input
+    """ Function which add the command line arguments required for the command line input
     of function definition extractor """
     # Create the parser
     func_parser = argparse.ArgumentParser(description='Function Definition Extractor')
@@ -31,6 +33,12 @@ def create_parser(args):
                              default=None,
                              help='Required number of lines at annotated method')
 
+    func_parser.add_argument('--functionstartwith',
+                             metavar='--f',
+                             type=str,
+                             default=None,
+                             help='functions starting with given key word')
+
     # ...Create your parser as you like...
     return func_parser.parse_args(args)
 
@@ -52,7 +60,7 @@ if __name__ == '__main__':
     ARGS = create_parser(sys.argv[1:])
     validate_inputs(ARGS.path)
     # Process the similarity with inputs provided
-    DATA_FR = extractor(ARGS.path, ARGS.annot, ARGS.delta)
-    WRITER = pd.ExcelWriter('%s.xlsx' % os.path.join(ARGS.path, "funcDefExtractResult"), engine='xlsxwriter')
-    DATA_FR.to_excel(WRITER, sheet_name="funcDefExtractResult")
-    WRITER.save()
+    DATA_FR = extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.functionstartwith)
+    DATA_FR.to_csv('%s.csv'
+                   % os.path.join(ARGS.path, "funcDefExtractResult_" +
+                                  str(datetime.datetime.fromtimestamp(time.time()).strftime('%H-%M-%S_%d_%m_%Y'))))

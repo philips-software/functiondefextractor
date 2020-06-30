@@ -2,8 +2,13 @@
 import subprocess
 import os
 import re
-import pandas as pd
+import sys
+import time
 
+import pandas as pd
+import extractor_log as cl
+
+LOG = cl.get_logger()
 DELTA_BODY = []
 UID_LIST = []
 
@@ -39,7 +44,10 @@ def get_function_names(file_names):
     else:
         cmd = "ctags -x " + file_names + "| grep %s " % find
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    return process_function_names(proc, find)
+    process = str(proc.stdout.read(), 'utf-8')
+    if process.strip() == "":
+        LOG.info("ctags: Warning: cannot open input file %s", file_names)
+    return process_function_names(process, find)
 
 
 def process_function_names(func_data, find):
@@ -49,14 +57,17 @@ def process_function_names(func_data, find):
         find: keyword of method type(member/function/class/method)
         @return
         This function returns list of function names and line numbers"""
-    process = str(func_data.stdout.read(), 'utf-8')
-    process_list = re.findall(r'\w+', process)
-    val = [index for index, _ in enumerate(process_list) if
-           process_list[index - 1] in find and process_list[index].isdigit()]
-    function_list = get_sorted_func_list(process_list, val)
-    line_numbers = get_func_line_num_list(process_list, val)
-    line_numbers.sort()
-    return function_list, line_numbers
+    if func_data is not None:
+        process_list = re.findall(r'\w+', func_data)
+        val = [index for index, _ in enumerate(process_list) if
+               process_list[index - 1] in find and process_list[index].isdigit()]
+        function_list = get_sorted_func_list(process_list, val)
+        line_numbers = get_func_line_num_list(process_list, val)
+        line_numbers.sort()
+        return function_list, line_numbers
+    else:
+        print("Input files doesn't have valid methods")
+        sys.exit(1)
 
 
 def get_sorted_func_list(process_list, val):
@@ -114,7 +125,7 @@ def get_file_content(filename):
         filename: Path to the file
         @return
         This function returns content of the file inputed"""
-    with open(filename) as file_data:
+    with open(filename, encoding='utf-8', errors='ignore') as file_data:
         return file_data.readlines()
 
 
@@ -126,14 +137,28 @@ def get_annot_methods(filename, line_num, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns function/method definitions that has the given annotation"""
+
     file_content = get_file_content(filename)
-    iterator = int(line_num) - 2
+    iterator = int(line_num) - 2  # Iterating through lines to check for annotations
     for _ in range(int(line_num) - 2):
-        data = str(file_content[iterator]).strip().upper()
+        data = str(file_content[iterator]).strip()
         iterator = iterator - 1
         ret_val = process_annot_method_body(annot, data, filename, line_num)
         if ret_val != "continue":
             return ret_val
+
+
+def process_annotation(annot):
+    """ This function process the annotation to extract methods having given annotation
+            @parameters
+            annot: Annotation condition (Ex: @Test)
+            @return
+            This function returns starting and ending character of the annotation"""
+    annot_start = annot[0]
+    annot_end = annot[len(annot) - 1]
+    if annot_end.isalpha():
+        annot_end = None
+    return annot_start, annot_end
 
 
 def process_annot_method_body(annot, data, filename, line_num):
@@ -146,9 +171,11 @@ def process_annot_method_body(annot, data, filename, line_num):
         @return
         This function returns function/method definitions that has the given annotation"""
     ret_val = "continue"
-    if annot.upper() in data.upper():
-        ret_val = get_func_body(filename, line_num)
-    elif data[:1] is not "@" and "}" in data or "{" in data:
+    annot_start, annot_end = process_annotation(annot)
+    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",")\
+            and data.strip().startswith(annot_start):
+        ret_val = data + os.linesep + get_func_body(filename, line_num)
+    elif data[:1] != "@" and "}" in data or "{" in data:
         ret_val = None
     return ret_val
 
@@ -160,16 +187,23 @@ def check_py_annot(file_name, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns function/method names that has the given annotation"""
-    line_data = list([line.rstrip() for line in open(file_name)])
+    line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
     data = []
     val = 0
-    if annot == "test_":
+    if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
         annot = "def test_"
         val = -1
     for i, _ in enumerate(line_data):
         if annot in line_data[i]:
-            func_name = line_data[i + 1 + val].strip().split(" ")[1].split("(")[0]
-            data.append(func_name)
+            if "def " in line_data[i + 1] or "def " in line_data[i]:
+                func_name = line_data[i + 1 + val].strip().split(" ")[1].split("(")[0]
+                data.append(func_name)
+            else:
+                for j in range(i, len(line_data)):
+                    if "def " in line_data[j]:
+                        func_name = line_data[j].strip().split(" ")[1].split("(")[0]
+                        data.append(func_name)
+                        break
     return data
 
 
@@ -184,7 +218,7 @@ def get_func_body(filename, line_num):
     cnt_braket = 0
     found_start = False
 
-    with open(filename, "r") as files:
+    with open(filename, "r", encoding='utf-8', errors='ignore') as files:
         for i, line in enumerate(files):
             if i >= (line_num - 1):
                 code += line
@@ -208,7 +242,7 @@ def get_py_func_body(line_numbers, file_name, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns python function/method definitions in the given files"""
-    line_data = list([line.rstrip() for line in open(file_name)])
+    line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
     data, data_func_name = process_py_methods(file_name, line_numbers, line_data)
     if annot is not None:
         data_func_name, data = get_py_annot_methods(file_name, data_func_name, data, annot)
@@ -232,8 +266,7 @@ def process_py_methods(file_name, line_numbers, line_data):
         start = line_numbers[i]
         stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
         data.append(os.linesep.join(line_data[start - 1:stop]))
-        data_func_name.append(
-            str(os.path.basename(file_name)) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
+        data_func_name.append(str(file_name) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:
             data.remove(data[len(data) - 1])
             data_func_name.pop(len(data_func_name) - 1)
@@ -314,7 +347,7 @@ def get_delta_lines(file_name, annot, delta):
     """ Function to get + and - delta number of lines from the annoted method/function
             @parameters
             filename, annot, delta: Path to the file, required annotation, required lines from method """
-    line_data = list(filter(None, [line.rstrip() for line in open(file_name)]))
+    line_data = list(filter(None, [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')]))
     data = []
     for num, line in enumerate(line_data, 1):
         process_delta_lines_body(annot, line, delta, num, line_data, data, file_name)
@@ -408,7 +441,7 @@ def process_input_files(line_num, functions, annot, func_name, code_list):
     for lin_no, func in zip(line_num, functions):
         if check_annot(func_name, lin_no, annot) is not None:
             code_list.append(check_annot(func_name, lin_no, annot))
-            UID_LIST.append(os.path.basename(func_name) + "_" + func)
+            UID_LIST.append(func_name + "_" + func)
     return code_list
 
 
@@ -426,7 +459,46 @@ def get_final_dataframe(delta, code_list):
     return ret_val
 
 
-def extractor(path_loc, annot=None, delta=None):
+def clean_log():
+    """ Function to clean the log file"""
+    ini_path = os.path.abspath(os.path.join
+                               (os.path.dirname(__file__), os.pardir))
+    file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
+    if os.path.exists(file_name):
+        open(file_name, 'w').close()
+
+
+def get_log_data(line):
+    """ function to get the line requested from log data"""
+    ini_path = os.path.abspath(os.path.join
+                               (os.path.dirname(__file__), os.pardir))
+    file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
+    file_variable = open(file_name, encoding='utf-8', errors='ignore')
+    all_lines_variable = file_variable.readlines()
+    string = all_lines_variable[-line]
+    string = string[0: 0:] + string[23 + 1::]
+    return string
+
+
+def remove_comments(dataframe):
+    """ This function removes comments from the code extracted
+            @parameters
+            dataframe: extracted methods in dataframe format
+            @return
+            This function returns function/method definitions by removing comments"""
+    filtered_code = []
+    data = ""
+    for i in range(len(dataframe).__trunc__()):
+        for line in dataframe.iat[i, 0].splitlines():
+            if not line.strip().startswith(("#", "//", "/*", "*", "*/")):
+                data = data + line.strip().split(";")[0] + os.linesep
+        filtered_code.append(data)
+        data = ""
+    dataframe["Code"] = filtered_code
+    return dataframe
+
+
+def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     """ Function that initiates the overall process of extracting function/method definitions from the files
         @parameters
         path_loc: directory path of the repository
@@ -439,11 +511,18 @@ def extractor(path_loc, annot=None, delta=None):
         function_def_extractor(path to repo, "@test")
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
+    clean_log()
+    start = time.time()
     if not os.path.exists(path_loc):
         print("Enter valid path")
+        LOG.info("Enter valid repo path")
         return "Enter valid path"
     code_list = []
+    LOG.info("Input repository path validated successfully")
+    if functionstartwith is not None:
+        annot = functionstartwith
     for func_name in filter_files(get_file_names(path_loc)):
+        LOG.info("Extracting %s", func_name)
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
         else:
@@ -452,4 +531,10 @@ def extractor(path_loc, annot=None, delta=None):
                 code_list = process_py_files(code_list, line_num, func_name, annot)
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
-    return get_final_dataframe(delta, code_list)
+        if "Warning:" in get_log_data(1):
+            LOG.info("Failed to extracted %s", func_name)
+        else:
+            LOG.info("Successfully extracted %s", func_name)
+    end = time.time()
+    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))
+    return remove_comments(get_final_dataframe(delta, code_list))

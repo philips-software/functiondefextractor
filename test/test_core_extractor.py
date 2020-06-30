@@ -26,8 +26,8 @@ class SimpleTest(unittest.TestCase):
     def test_get_function_names(self):
         """Function to test get_function_names method"""
         func, line_num = get_function_names(os.path.join(self.src_files, "HelloController.java"))
-        expec_func = ['meth', 'index1', 'index2']
-        expec_line_num = [29, 61, 67]
+        expec_func = ['meth', 'index1', 'index2']  # Expected method names
+        expec_line_num = [29, 61, 67]  # Expected method line numbers
         self.assertEqual(expec_func, func)
         self.assertEqual(expec_line_num, line_num)
 

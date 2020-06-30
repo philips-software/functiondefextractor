@@ -17,15 +17,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: 3.8
         node-version: ${{ env.NODE_VERSION }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Aspell install
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --assume-yes aspell aspell-en
     - name: npm install
       run: |
         sudo npm install
