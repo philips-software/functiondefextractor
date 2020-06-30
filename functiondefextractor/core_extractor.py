@@ -172,7 +172,7 @@ def process_annot_method_body(annot, data, filename, line_num):
         This function returns function/method definitions that has the given annotation"""
     ret_val = "continue"
     annot_start, annot_end = process_annotation(annot)
-    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",")\
+    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",") \
             and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
     elif data[:1] != "@" and "}" in data or "{" in data:
@@ -188,11 +188,22 @@ def check_py_annot(file_name, annot):
         @return
         This function returns function/method names that has the given annotation"""
     line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
-    data = []
     val = 0
     if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
         annot = "def test_"
         val = -1
+    return get_py_annot_method_names(line_data, annot, val)
+
+
+def get_py_annot_method_names(line_data, annot, val):
+    """ Function checks for the annotation condition in python files
+        @parameters
+        line_data: File content in list format
+        annot: Annotation condition (Ex: @Test)
+        val: index pointer that helps in getting method name
+        @return
+        This function returns function/method names that has the given annotation"""
+    data = []
     for i, _ in enumerate(line_data):
         if annot in line_data[i]:
             if "def " in line_data[i + 1] or "def " in line_data[i]:
