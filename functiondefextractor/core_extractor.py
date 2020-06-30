@@ -172,7 +172,7 @@ def process_annot_method_body(annot, data, filename, line_num):
         This function returns function/method definitions that has the given annotation"""
     ret_val = "continue"
     annot_start, annot_end = process_annotation(annot)
-    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",") \
+    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",")\
             and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
     elif data[:1] != "@" and "}" in data or "{" in data:
