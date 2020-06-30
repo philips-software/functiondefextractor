@@ -14,13 +14,6 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 
-def get_license():
-    """ replace the license content while creating the package"""
-    with open("LICENSE.md", "r", encoding="utf8") as fh:
-        license_description = fh.read()
-        return license_description
-
-
 def get_maintainers():
     """ replace the maintainers content while creating the package"""
     with open("MAINTAINERS.md", "r", encoding="utf8") as fh:
@@ -51,5 +44,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=required,
-    python_requires='>=3.7',
+    python_requires='>=3.8',
 )
