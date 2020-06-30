@@ -551,4 +551,3 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))
     LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))
     return remove_comments(get_final_dataframe(delta, code_list))
-
