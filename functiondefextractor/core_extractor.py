@@ -172,7 +172,7 @@ def process_annot_method_body(annot, data, filename, line_num):
         This function returns function/method definitions that has the given annotation"""
     ret_val = "continue"
     annot_start, annot_end = process_annotation(annot)
-    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",")\
+    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start).strip(annot_end).upper().split(",") \
             and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
     elif data[:1] != "@" and "}" in data or "{" in data:
@@ -533,6 +533,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     if functionstartwith is not None:
         annot = functionstartwith
     for func_name in filter_files(get_file_names(path_loc)):
+        print(func_name)
         LOG.info("Extracting %s", func_name)
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
@@ -548,4 +549,9 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
             LOG.info("Successfully extracted %s", func_name)
     end = time.time()
     LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))
+    LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))
     return remove_comments(get_final_dataframe(delta, code_list))
+
+#
+# x = extractor(r"C:\Users\320074769\Downloads\OneDrive_2020-06-30\src")
+# print(x)
