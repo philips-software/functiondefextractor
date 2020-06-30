@@ -1,0 +1,26 @@
+matrix:
+
+- name: py
+  sources:
+  - "functiondefextractor/*.py"
+  - "test/*.py"
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - spell_check/spell_ignore_py.txt
+  pipeline:
+  - pyspelling.filters.python:
+      comments: false
+      
+- name: markdown
+  pipeline:
+  - pyspelling.filters.text
+  sources:
+  - '**/*.md'
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - spell_check/spell_ignore_md.txt
+  default_encoding: utf-8
