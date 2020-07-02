@@ -550,10 +550,3 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
     LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))
-<<<<<<< HEAD
-
-# x = extractor(r"C:\Users\320074769\Downloads\src\src")
-# print(x)
-# x.to_csv("typescript.csv")
-=======
->>>>>>> 658b47898c810492f1e672f58315d4d9ed2f3c07
