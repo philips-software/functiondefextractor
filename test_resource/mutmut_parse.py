@@ -38,6 +38,8 @@ def parse_mutmut_report_xml(allow_fail):
         failures = int(root.get('failures'))
         tests = int(root.get('tests'))
         total_fail = disabled+errors+failures
+        print("Total Failure= %s || Total Tests= %s || Total Allowed percent fail= %s" % (total_fail, tests,
+                                                                                          allow_fail))
         check_pass_fail(total_fail, tests, allow_fail)
     except FileNotFoundError:
         print("mutmut.xml report file path")
