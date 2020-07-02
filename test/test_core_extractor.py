@@ -64,10 +64,12 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "@Test", "5")
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A_D")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "expeccodeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID').values.tolist()
+                                              "expeccodeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "codeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(len(df1_list), len(df2_list))
+                                              "codeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID')
+        df1_list["Code"]= df1_list["Code"].str.replace(os.linesep, "")
+        df2_list["Code"]= df2_list["Code"].str.replace("\n", "")
+        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                "expeccodeextractor_T_T_A_D.xlsx"))
 
@@ -76,10 +78,16 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), None, None)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "expeccodeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
+                                              "expeccodeextractor_T_T_A.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(len(df1_list), len(df2_list))
+                                              "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID')
+        df1_list["Code"]= df1_list["Code"].str.replace(os.linesep, "")
+        df2_list["Code"]= df2_list["Code"].str.replace("\n", "")
+        df2_list["Code"]= df2_list["Code"].str.strip()
+        print(df1_list["Code"])
+        print("*********")
+        print(df2_list["Code"])
+        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
@@ -87,10 +95,12 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "@Test", None)
         self.__write_xlsx(dataframe, "expeccodeextractor_annot")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "expeccodeextractor_annot.xlsx")).sort_values('Uniq ID').values.tolist()
+                                              "expeccodeextractor_annot.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "codeextractor_annot.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(len(df1_list), len(df2_list))
+                                              "codeextractor_annot.xlsx")).sort_values('Uniq ID')
+        df1_list["Code"]= df1_list["Code"].str.replace(os.linesep, "")
+        df2_list["Code"]= df2_list["Code"].str.replace("\n", "")
+        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_annot.xlsx"))
 
     def test_process_python_test_extract(self):
@@ -98,10 +108,12 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "test_", None)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "expeccodeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
+                                              "expeccodeextractor_T_T.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "codeextractor_T_T.xlsx")).sort_values('Uniq ID').values.tolist()
-        self.assertEqual(len(df1_list), len(df2_list))
+                                              "codeextractor_T_T.xlsx")).sort_values('Uniq ID')
+        df1_list["Code"]= df1_list["Code"].str.replace(os.linesep, "")
+        df2_list["Code"]= df2_list["Code"].str.replace("\n", "")
+        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T.xlsx"))
 
     def test_invalid_path(self):

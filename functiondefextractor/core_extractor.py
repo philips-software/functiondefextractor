@@ -37,8 +37,8 @@ def get_function_names(file_names):
         @return
         This function returns function/method names and line numbers of all the given files"""
     file_ext = str(os.path.basename(file_names).split('.')[1])
-    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" else ["member", "function", "class"] \
-        if file_ext.upper() == "PY" else "method"
+    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
+        else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"
     if find == ["member", "function", "class"]:
         cmd = "ctags -x " + file_names
     else:
@@ -46,7 +46,7 @@ def get_function_names(file_names):
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process = str(proc.stdout.read(), 'utf-8')
     if process.strip() == "":
-        LOG.info("ctags: Warning: cannot open input file %s", file_names)
+        LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
     return process_function_names(process, find)
 
 
@@ -172,7 +172,7 @@ def process_annot_method_body(annot, data, filename, line_num):
         This function returns function/method definitions that has the given annotation"""
     ret_val = "continue"
     annot_start, annot_end = process_annotation(annot)
-    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start)\
+    if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start) \
             .strip(annot_end).upper().split(",") and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
     elif data[:1] != "@" and "}" in data or "{" in data:
@@ -526,15 +526,14 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     start = time.time()
     if not os.path.exists(path_loc):
         print("Enter valid path")
-        LOG.info("Enter valid repo path")
+        LOG.info("Enter valid repo path")  # pragma: no mutate
         return "Enter valid path"
     code_list = []
-    LOG.info("Input repository path validated successfully")
+    LOG.info("Input repository path validated successfully")  # pragma: no mutate
     if functionstartwith is not None:
         annot = functionstartwith
     for func_name in filter_files(get_file_names(path_loc)):
-        print(func_name)
-        LOG.info("Extracting %s", func_name)
+        LOG.info("Extracting %s", func_name)  # pragma: no mutate
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
         else:
@@ -544,11 +543,14 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
         if "Warning:" in get_log_data(1):
-            LOG.info("Failed to extracted %s", func_name)
+            LOG.info("Failed to extracted %s", func_name)  # pragma: no mutate
         else:
-            LOG.info("Successfully extracted %s", func_name)
+            LOG.info("Successfully extracted %s", func_name)  # pragma: no mutate
     end = time.time()
-    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))
-    LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))
+    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
+    LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))
 
+# x = extractor(r"C:\Users\320074769\Downloads\src\src")
+# print(x)
+# x.to_csv("typescript.csv")
