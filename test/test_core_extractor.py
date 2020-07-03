@@ -20,8 +20,8 @@ class SimpleTest(unittest.TestCase):
         files = get_file_names(self.src_files)
         expected = [os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
                     os.path.join(self.src_files, "test_repo.java"), os.path.join(self.src_files, "test_cpp_code.cpp"),
-                    os.path.join(self.src_files, "Python_annot_file.py"),
-                    os.path.join(self.src_files, "Python_file.py")]
+                    os.path.join(self.src_files, "python_annot_file.py"),
+                    os.path.join(self.src_files, "python_file.py")]
         self.assertEqual(expected.sort(), files.sort())
 
     def test_get_function_names(self):
@@ -120,8 +120,8 @@ class SimpleTest(unittest.TestCase):
 
     def test_py_annot_method_names(self):
         """Function to test python annoted method names"""
-        file_name = os.path.join(self.src_files, "python_annot_file.py")
-        line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
+        line_data = list([line.rstrip() for line in open(os.path.join(self.src_files, "python_annot_file.py"),
+                                                         encoding='utf-8', errors='ignore')])
         self.assertEqual(str(get_py_annot_method_names(line_data, "@staticmethod", 0)), "['validate_return']")
 
 
