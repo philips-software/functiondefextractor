@@ -66,7 +66,7 @@ def process_function_names(func_data, find):
         line_numbers.sort()
         return function_list, line_numbers
     else:
-        print("Input files doesn't have valid methods")
+        print("Input files doesn't have valid methods")  # pragma: no mutate
         sys.exit(1)
 
 
@@ -175,7 +175,7 @@ def process_annot_method_body(annot, data, filename, line_num):
     if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start) \
             .strip(annot_end).upper().split(",") and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
-    elif data[:1] != "@" and "}" in data or "{" in data:
+    elif data[:1] != "@" and str(data).strip() == "}" or str(data).strip() == "{":
         ret_val = None
     return ret_val
 
@@ -206,12 +206,12 @@ def get_py_annot_method_names(line_data, annot, val):
     data = []
     for i, _ in enumerate(line_data):
         if annot in line_data[i]:
-            if "def " in line_data[i + 1] or "def " in line_data[i]:
+            if "def" == str(line_data[i]).strip().split(" ")[0]:
                 func_name = line_data[i + 1 + val].strip().split(" ")[1].split("(")[0]
                 data.append(func_name)
             else:
                 for j in range(i, len(line_data)):
-                    if "def " in line_data[j]:
+                    if "def" == str(line_data[j]).strip().split(" ")[0]:
                         func_name = line_data[j].strip().split(" ")[1].split("(")[0]
                         data.append(func_name)
                         break
@@ -525,7 +525,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
     clean_log()
     start = time.time()
     if not os.path.exists(path_loc):
-        print("Enter valid path")
+        print("Enter valid path")  # pragma: no mutate
         LOG.info("Enter valid repo path")  # pragma: no mutate
         return "Enter valid path"
     code_list = []

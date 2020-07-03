@@ -7,6 +7,7 @@ from core_extractor import get_file_names
 from core_extractor import get_function_names
 from core_extractor import get_func_body
 from core_extractor import extractor
+from core_extractor import get_py_annot_method_names
 
 
 class SimpleTest(unittest.TestCase):
@@ -116,6 +117,12 @@ class SimpleTest(unittest.TestCase):
     def test_invalid_path(self):
         """Function to test valid input path"""
         self.assertEqual(extractor(os.path.join("abc", "sdr")), "Enter valid path")
+
+    def test_py_annot_method_names(self):
+        """Function to test python annoted method names"""
+        file_name = os.path.join(self.src_files, "python_annot_file.py")
+        line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
+        self.assertEqual(str(get_py_annot_method_names(line_data, "@staticmethod", 0)), "['validate_return']")
 
 
 if __name__ == '__main__':
