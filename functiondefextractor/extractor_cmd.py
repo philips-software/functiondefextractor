@@ -1,12 +1,13 @@
 """ File provide command line interface for the text similarity index processor """
-import datetime
+import argparse
 import os
 import subprocess
 import sys
-import argparse
-import time
 
+from condition_checker import check_condition
 from core_extractor import extractor
+from core_extractor import get_report
+from core_extractor import LOG
 
 
 def create_parser(args):
@@ -33,34 +34,62 @@ def create_parser(args):
                              default=None,
                              help='Required number of lines at annotated method')
 
-    func_parser.add_argument('--functionstartwith',
+    func_parser.add_argument('--funcstartwith',
                              metavar='--f',
                              type=str,
                              default=None,
                              help='functions starting with given key word')
 
+    func_parser.add_argument('--reportpath',
+                             metavar='--r',
+                             type=str,
+                             default=None,
+                             help='Input report folder path')
+
+    func_parser.add_argument('--excelfilepath',
+                             metavar='--e',
+                             type=str,
+                             default=None,
+                             help='Input excel file path')
+
+    func_parser.add_argument('--conditionchecker',
+                             metavar='--c',
+                             type=str,
+                             default=None,
+                             help='condition to analyse against extracted methods')
+
     # ...Create your parser as you like...
     return func_parser.parse_args(args)
 
 
-def validate_inputs(arg_path):
+def validate_inputs(arg_path, repo):
     """This function helps in validating the user inputs"""
-    status_path = os.path.exists(arg_path)
+    status_path = True if os.path.splitext(arg_path)[1].upper() == ".XLSX" and os.path.exists(arg_path) \
+        else False if repo == "Excel file" else os.path.exists(arg_path)
+    if status_path:
+        LOG.info("Input path validated")  # pragma: no mutate
     if not status_path:
-        print("Enter Valid Path")
+        LOG.info("Enter valid %s path" % repo)  # pragma: no mutate
+        print("Enter valid %s path" % repo)  # pragma: no mutate
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))
         cmd = 'python %s --h' % script
         subprocess.call(cmd, shell=True)
-        raise SystemExit
+        sys.exit(1)
 
 
 if __name__ == '__main__':
     # Execute the parse_args() method
     ARGS = create_parser(sys.argv[1:])
-    validate_inputs(ARGS.path)
-    # Process the similarity with inputs provided
-    DATA_FR = extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.functionstartwith)
-    DATA_FR.to_csv('%s.csv'
-                   % os.path.join(ARGS.path, "funcDefExtractResult_" +
-                                  str(datetime.datetime.fromtimestamp(time.time()).strftime('%H-%M-%S_%d_%m_%Y'))))
+    if ARGS.delta is not None and ARGS.annot is None:
+        print("delta(--d) should be in combination with annotation(--a)")
+        raise SystemExit
+    if ARGS.conditionchecker is None:
+        validate_inputs(ARGS.path, "repository")
+        ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
+        validate_inputs(ARGS.reportpath, "report folder")
+        DATA_FR = get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath)
+                             , ARGS.reportpath)
+    else:
+        validate_inputs(ARGS.excelfilepath, "Excel file")
+        check_condition(ARGS.conditionchecker, ARGS.excelfilepath)

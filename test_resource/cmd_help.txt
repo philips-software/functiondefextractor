@@ -1,5 +1,6 @@
 usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
-                        [--functionstartwith --f]
+                        [--funcstartwith --f] [--reportpath --r]
+                        [--excelfilepath --e] [--conditionchecker --c]
 
 Function Definition Extractor
 
@@ -9,5 +10,8 @@ optional arguments:
   --annot --a           Annotation condition to get function/method
                         definitions
   --delta --d           Required number of lines at annotated method
-  --functionstartwith --f
-                        functions starting with given key word
+  --funcstartwith --f   functions starting with given key word
+  --reportpath --r      Input report folder path
+  --excelfilepath --e   Input excel file path
+  --conditionchecker --c
+                        condition to analyse against extracted methods

@@ -13,7 +13,7 @@ Project will help to extract the function definitions from source or test code a
 
 Dependencies
 ------------
-`Python 3.7.3 `
+`Python 3.8 ==> 64 bit package `
 
 [packages]
 **************
@@ -56,7 +56,7 @@ print(out_put)
 ```
 from functiondefextractor import core_extractor
 out_put = core_extractor.extractor (r"path_to_repo/code")
-# Default value of arguments are parse_code="True", parse_test="True", annot=None, delta=None
+# Default value of arguments are annot=None, delta=None
 print(out_put)
 ```
 3. To call from commandline
@@ -73,8 +73,7 @@ Note:
 3.An xlsx file is also generated as output in the same input location. 
 ```
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code", parse_code="True", parse_test="True
-", annot="@Test", delta="5")
+out_put = core_extractor.extractor (r"path_to_repo/code, annot="@Test", delta="5")
 print(out_put)
 ```
 

@@ -1,13 +1,16 @@
 """ This file holds the unit test cases """
-import unittest
 import os
+import unittest
+from unittest.mock import patch
 from test.test_resource import TestResource
 import pandas as pd
-from core_extractor import get_file_names
+from condition_checker import check_condition
+from core_extractor import get_file_names, get_report, get_log_data
 from core_extractor import get_function_names
 from core_extractor import get_func_body
 from core_extractor import extractor
 from core_extractor import get_py_annot_method_names
+from extractor_cmd import validate_inputs
 
 
 class SimpleTest(unittest.TestCase):
@@ -123,6 +126,52 @@ class SimpleTest(unittest.TestCase):
         line_data = list([line.rstrip() for line in open(os.path.join(self.src_files, "python_annot_file.py"),
                                                          encoding='utf-8', errors='ignore')])
         self.assertEqual(str(get_py_annot_method_names(line_data, "@staticmethod", 0)), "['validate_return']")
+
+    def test_get_report(self):
+        """Function to test report generated"""
+        dataframe = get_report(extractor((os.path.join(self.file_path, "test_resource", "test_repo")), None, None),
+                               (os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")))
+        self.__write_xlsx(dataframe, "Expec_Extracted_methods")
+        df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                              "Extracted_methods.xlsx")).sort_values('Uniq ID')
+        df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                              "Expec_Extracted_methods.xlsx")).sort_values('Uniq ID')
+        df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
+        df2_list["Code"] = df2_list["Code"].str.replace("\n", "")
+        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Expec_Extracted_methods.xlsx"))
+        my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")
+        for fname in os.listdir(my_dir):
+            if fname.startswith("ExtractedFunc_"):
+                os.remove(os.path.join(my_dir, fname))
+
+    def test_check_condition(self):
+        """Function to test pattern finder function"""
+        res = check_condition("@Test",
+                              os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                           "codeextractor_annot.csv"))
+        self.assertEqual(res, "Enter Valid Excel File")
+        res = check_condition("@Test",
+                              os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                           "Sample.xlsx"))
+        self.assertEqual(res, "Couldn't find vaild data")
+        check_condition("@Test",
+                        os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "codeextractor_annot.xlsx"))
+        df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                              "Pattern_Result.xlsx")).sort_values('Uniq ID')
+        df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                              "Pattern_Result_Test.xlsx")).sort_values('Uniq ID')
+        self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
+
+    def test_cmd_inputs(self):
+        """Function to test command line input validation function"""
+        validate_inputs(os.getcwd(), "sample_path")
+        self.assertEqual("Input path validated", get_log_data(1).strip())
+        with patch('sys.exit') as exit_mock:
+            validate_inputs("no/path", "sample_path")
+            self.assertEqual("Enter valid sample_path path", get_log_data(1).strip())
+            assert exit_mock
 
 
 if __name__ == '__main__':

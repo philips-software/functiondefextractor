@@ -1,4 +1,5 @@
 """This file contains all the functions required for extracting method/function definitions from the given repository"""
+import datetime
 import subprocess
 import os
 import re
@@ -37,9 +38,10 @@ def get_function_names(file_names):
         @return
         This function returns function/method names and line numbers of all the given files"""
     file_ext = str(os.path.basename(file_names).split('.')[1])
-    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
-        else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"
-    if find == ["member", "function", "class"]:
+    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" or file_ext.upper() == "JS" \
+        else ["member", "function", "class"] if file_ext.upper() == "PY" else ["method", "function"] \
+        if file_ext.upper() == "TS" else "method"
+    if find in (['member', 'function', 'class'], ['method', 'function']):
         cmd = "ctags -x " + file_names
     else:
         cmd = "ctags -x " + file_names + "| grep %s " % find
@@ -344,7 +346,7 @@ def filter_files(list_files):
     list_files: List of all files that the given repository contains
     @return
     This function returns the list of required file(.java, .cpp, .c, .cs, .py) paths """
-    ext = [".java", ".cpp", ".c", ".cs", ".py"]
+    ext = [".java", ".cpp", ".c", ".cs", ".py", ".ts", ".js"]
     local_files = []
     for files in list_files:
         extension = os.path.splitext(files)
@@ -509,7 +511,82 @@ def remove_comments(dataframe):
     return dataframe
 
 
-def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
+def get_report(data, path):
+    """ This function classifies the report files based on the file type(Ex: .java, .cs, .py, etc.)
+                @parameters
+                data: extracted methods in dataframe format
+                path: Report folder path"""
+    method_data = [[] for _ in range(7)]
+    method_name = [[] for _ in range(7)]
+    file_type = ['.JAVA', '.CS', '.C', '.CPP', '.PY', '.TS', '.JS']
+    for i in range(len(data).__trunc__()):
+        extension = os.path.splitext(data.index[i])
+        res = str([ext for ext in file_type if ext == str(extension[1]).split("_")[0].upper()])
+        if str(res) != "[]":
+            method_data[int(file_type.index(res.strip("[]''")))].append(data.iat[i, 0])
+            method_name[int(file_type.index(res.strip("[]''")))].append(data.index[i])
+    return write_report_files(file_type, path, method_name, method_data)
+
+
+def write_report_files(file_type, path, method_name, method_data):
+    """ This function write the dataframe to excel files
+        @parameters
+        path: Report folder path
+        method_name: extracted method names
+        method_data: extracted method definitions
+        @return
+        returns a dataframe with all the extracted method names and definitions"""
+    for i in range(len(file_type).__trunc__()):
+        dataframe = pd.DataFrame(list(zip(method_name[i], method_data[i])),
+                                 columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+        if len(dataframe).__trunc__() != 0:
+            writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" +
+                                                             str(file_type[i]).strip(".") + "_" +
+                                                             str(datetime.datetime.fromtimestamp(time.time()).strftime(
+                                                                 '%H-%M-%S_%d_%m_%Y'))), engine='xlsxwriter')
+            dataframe.to_excel(writer, sheet_name="funcDefExtractResult")
+            writer.save()
+    return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+
+
+def validate_input_paths(path):
+    """This function helps in validating the user inputs"""
+    status_path = os.path.exists(path)
+    if not status_path:
+        print("Enter Valid Path", path)  # pragma: no mutate
+        LOG.info("Enter valid path %s", path)  # pragma: no mutate
+        sys.stdout.flush()
+        script = None
+        cmd = 'python %s --h' % script
+        subprocess.call(cmd, shell=True)
+        return "Enter valid path"
+
+
+def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
+    """ Function that initializes the input variables
+            @parameters
+            path_loc: directory path of the repository
+            annot: given annotation condition (Ex: @staticmethod, @Test)
+            report_folder: path to report
+            @return
+            This function returns a valid report folder and annotation"""
+    clean_log()
+    if delta is not None and annot is None:
+        return "delta(--d) should be in combination with annotation(--a)"
+    if validate_input_paths(path_loc):
+        return "Enter valid path"
+    LOG.info("Input repository path validated successfully")  # pragma: no mutate
+    if report_folder is None:
+        report_folder = path_loc
+    if validate_input_paths(report_folder):
+        return "Enter valid report path"
+    LOG.info("Input report folder path validated successfully")  # pragma: no mutate
+    if functionstartwith is not None:
+        annot = functionstartwith
+    return report_folder, annot
+
+
+def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None):
     """ Function that initiates the overall process of extracting function/method definitions from the files
         @parameters
         path_loc: directory path of the repository
@@ -522,16 +599,12 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None):
         function_def_extractor(path to repo, "@test")
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
-    clean_log()
     start = time.time()
-    if not os.path.exists(path_loc):
-        print("Enter valid path")  # pragma: no mutate
-        LOG.info("Enter valid repo path")  # pragma: no mutate
-        return "Enter valid path"
+    if type(initialize_values(delta, annot, path_loc, report_folder, functionstartwith)) == str:
+        return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
+    else:
+        report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     code_list = []
-    LOG.info("Input repository path validated successfully")  # pragma: no mutate
-    if functionstartwith is not None:
-        annot = functionstartwith
     for func_name in filter_files(get_file_names(path_loc)):
         LOG.info("Extracting %s", func_name)  # pragma: no mutate
         if delta is not None:
