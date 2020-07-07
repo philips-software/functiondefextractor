@@ -47,18 +47,18 @@ def get_function_names(file_names):
         cmd = "ctags -x " + file_names + "| grep %s " % find
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process = str(proc.stdout.read(), 'utf-8')
-    if process.strip() == "":
-        LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
-    return process_function_names(process, find)
+    return process_function_names(process, find, file_names)
 
 
-def process_function_names(func_data, find):
+def process_function_names(func_data, find, file_names):
     """ This function cleans the ctags output to get function/method names and line numbers
         @parameters
         func_data: Ctags output
         find: keyword of method type(member/function/class/method)
         @return
         This function returns list of function names and line numbers"""
+    if func_data.strip() == "":
+        LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
     if func_data is not None:
         process_list = re.findall(r'\w+', func_data)
         val = [index for index, _ in enumerate(process_list) if
