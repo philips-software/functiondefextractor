@@ -1,30 +1,30 @@
-2020-07-08 12:37:24,901 Input repository path validated successfully
-2020-07-08 12:37:24,901 Input report folder path validated successfully
-2020-07-08 12:37:24,904 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\CerberusTest.java
-2020-07-08 12:37:25,129 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\CerberusTest.java
-2020-07-08 12:37:25,129 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\HelloController.java
-2020-07-08 12:37:25,371 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\HelloController.java
-2020-07-08 12:37:25,371 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_annot_file.py
-2020-07-08 12:37:25,581 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_annot_file.py
-2020-07-08 12:37:25,582 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_file.py
-2020-07-08 12:37:25,784 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_file.py
-2020-07-08 12:37:25,784 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_c.c
-2020-07-08 12:37:26,074 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_c.c
-2020-07-08 12:37:26,074 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_cpp_code.cpp
-2020-07-08 12:37:26,288 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_cpp_code.cpp
-2020-07-08 12:37:26,288 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_guardrails.py
-2020-07-08 12:37:26,492 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_guardrails.py
-2020-07-08 12:37:26,493 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_repo.java
-2020-07-08 12:37:26,711 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_repo.java
-2020-07-08 12:37:26,712 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.js
-2020-07-08 12:37:26,918 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.js
-2020-07-08 12:37:26,919 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.ts
-2020-07-08 12:37:27,130 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.ts
-2020-07-08 12:37:27,130 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\test\TestHelloController.java
-2020-07-08 12:37:27,402 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\test\TestHelloController.java
-2020-07-08 12:37:27,402 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\test.cs
-2020-07-08 12:37:27,611 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\test.cs
-2020-07-08 12:37:27,611 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\TstHelloController.java
-2020-07-08 12:37:27,813 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\TstHelloController.java
-2020-07-08 12:37:27,813 Extraction process took 0.049 minutes
-2020-07-08 12:37:27,815 13 vaild files has been analysed
+2020-07-08 13:37:13,475 Input repository path validated successfully
+2020-07-08 13:37:13,476 Input report folder path validated successfully
+2020-07-08 13:37:13,478 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\CerberusTest.java
+2020-07-08 13:37:13,680 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\CerberusTest.java
+2020-07-08 13:37:13,680 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\HelloController.java
+2020-07-08 13:37:13,880 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\HelloController.java
+2020-07-08 13:37:13,880 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_annot_file.py
+2020-07-08 13:37:14,040 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_annot_file.py
+2020-07-08 13:37:14,040 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_file.py
+2020-07-08 13:37:14,206 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\python_file.py
+2020-07-08 13:37:14,206 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_c.c
+2020-07-08 13:37:14,411 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_c.c
+2020-07-08 13:37:14,412 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_cpp_code.cpp
+2020-07-08 13:37:14,603 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_cpp_code.cpp
+2020-07-08 13:37:14,603 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_guardrails.py
+2020-07-08 13:37:14,762 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_guardrails.py
+2020-07-08 13:37:14,762 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_repo.java
+2020-07-08 13:37:14,978 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\test_repo.java
+2020-07-08 13:37:14,978 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.js
+2020-07-08 13:37:15,256 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.js
+2020-07-08 13:37:15,257 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.ts
+2020-07-08 13:37:15,463 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\src\typescript_sample.ts
+2020-07-08 13:37:15,463 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\test\TestHelloController.java
+2020-07-08 13:37:15,662 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\test\TestHelloController.java
+2020-07-08 13:37:15,662 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\test.cs
+2020-07-08 13:37:15,851 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\test.cs
+2020-07-08 13:37:15,851 Extracting C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\TstHelloController.java
+2020-07-08 13:37:16,048 Successfully extracted C:\Users\320074769\Downloads\Python_Repos\funcSSH\functiondefextractor\test_resource\test_repo\tst\TstHelloController.java
+2020-07-08 13:37:16,049 Extraction process took 0.043 minutes
+2020-07-08 13:37:16,051 13 vaild files has been analysed

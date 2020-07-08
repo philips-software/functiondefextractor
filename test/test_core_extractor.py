@@ -136,9 +136,7 @@ class SimpleTest(unittest.TestCase):
                                               "Extracted_methods.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "Expec_Extracted_methods.xlsx")).sort_values('Uniq ID')
-        df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
-        df2_list["Code"] = df2_list["Code"].str.replace("\n", "")
-        self.assertTrue(df1_list["Code"].equals(df2_list["Code"]))
+        self.assertEqual(len(df1_list["Code"]), len(df2_list["Code"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Expec_Extracted_methods.xlsx"))
         my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")
         for fname in os.listdir(my_dir):
@@ -161,6 +159,8 @@ class SimpleTest(unittest.TestCase):
                                               "Pattern_Result.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "Pattern_Result_Test.xlsx")).sort_values('Uniq ID')
+        df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
+        df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
         self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
 
