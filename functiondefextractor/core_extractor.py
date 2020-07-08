@@ -31,6 +31,24 @@ def get_file_names(dir_path):
     return allfiles
 
 
+def run_ctags_cmd(file_ext, file_names, find):
+    """ Function to execute ctags command
+        @parameters
+        file_ext: file type(.py, .java etc)
+        file_names: path to file
+        find: keyword to run ctags command
+        @return
+        This function returns ctags output"""
+    if file_ext.upper() == "PY":
+        cmd = "ctags -x " + file_names
+    elif file_ext.upper() == "TS" or file_ext.upper() == "JS":
+        cmd = "ctags --language-force=java -x " + file_names + "| grep %s " % find
+    else:
+        cmd = "ctags -x " + file_names + "| grep %s " % find
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    return proc
+
+
 def get_function_names(file_names):
     """ Function to get method/function names from the input files in the given repo
         @parameters
@@ -38,14 +56,16 @@ def get_function_names(file_names):
         @return
         This function returns function/method names and line numbers of all the given files"""
     file_ext = str(os.path.basename(file_names).split('.')[1])
-    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" or file_ext.upper() == "JS" \
-        else ["member", "function", "class"] if file_ext.upper() == "PY" else ["method", "function"] \
-        if file_ext.upper() == "TS" else "method"
-    if find in (['member', 'function', 'class'], ['method', 'function']):
-        cmd = "ctags -x " + file_names
-    else:
-        cmd = "ctags -x " + file_names + "| grep %s " % find
-    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
+        else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"
+    proc = run_ctags_cmd(file_ext, file_names, find)
+    # if file_ext.upper() == "PY":
+    #     cmd = "ctags -x " + file_names
+    # elif file_ext.upper() == "TS" or file_ext.upper() == "JS":
+    #     cmd = "ctags --language-force=java -x " + file_names + "| grep %s " % find
+    # else:
+    #     cmd = "ctags -x " + file_names + "| grep %s " % find
+    # proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process = str(proc.stdout.read(), 'utf-8')
     return process_function_names(process, find, file_names)
 
