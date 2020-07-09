@@ -21,7 +21,7 @@ def check_condition(condition, file_path):
     specifier_column = []
     spe_data = ""
     for i in range(len(data)):
-        for line in data.iat[i, 0].splitlines():
+        for line in str(data.iat[i, 0]).splitlines():
             if test_assert.upper() in line.strip().upper():
                 spe_data = spe_data + line.strip() + os.linesep
         specifier_column.append(spe_data)

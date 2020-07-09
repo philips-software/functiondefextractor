@@ -8,8 +8,6 @@ def get_license():
         return license_description
 
 
-import setuptools
-
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
