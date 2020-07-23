@@ -2,6 +2,8 @@
 import os
 import unittest
 from unittest.mock import patch
+
+
 from test.test_resource import TestResource
 import pandas as pd
 from condition_checker import check_condition
@@ -159,13 +161,16 @@ class SimpleTest(unittest.TestCase):
                                               "Pattern_Result.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "Pattern_Result_Test.xlsx")).sort_values('Uniq ID')
+        df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                    "Test_pivot_table_Test.html"))
+        df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                    "Pivot_table_Test.html"))
         df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
         df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
         self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
-        self.assertTrue(os.path.isfile(os.path.join(os.path.dirname(__file__), os.pardir,
-                                                    "test_resource", "Pivot_table_@Test.png")))
+        self.assertTrue(df1_pivot_table[0].equals(df2_pivot_table[0]))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
-        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_@Test.png"))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_Test.html"))
 
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""

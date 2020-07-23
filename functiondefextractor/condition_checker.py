@@ -3,7 +3,6 @@ based on given condition"""
 import os
 
 import pandas as pd
-import excel2img
 
 
 def check_condition(condition, file_path, splitter=None):
@@ -30,7 +29,6 @@ def check_condition(condition, file_path, splitter=None):
         spe_data = ""
     data['Count of %s in function' % test_assert] = data["Code"].str.upper().str.count(test_assert.upper())
     data["%s Statements" % test_assert] = specifier_column
-    data.to_excel(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx') % condition.strip("@"))
     get_pivot_table_result(data, test_assert, splitter, file_path)
 
 
@@ -50,10 +48,11 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table = data_table.to_frame()
     data_table = data_table.rename({'Count of %s in function' % test_assert:
                                         'Different %s pattern counts' % test_assert}, axis='columns')
-    writer = pd.ExcelWriter('pivot_table.xlsx')
-    data_table.to_excel(writer, sheet_name='sheetName', index=True, na_rep='NaN')
-    [writer.sheets['sheetName'].set_column(i, i, len('Different %s pattern counts' % test_assert)) for i in range(2)]
+    html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
+    writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
+                            % test_assert.strip("@"), engine='xlsxwriter')
+    data.to_excel(writer, sheet_name='Data')
+    data_table.to_excel(writer, sheet_name='Pivot Table')
+    data_table.index.name = None
+    data_table.to_html(html_file_path)
     writer.save()
-    excel2img.export_img(r"pivot_table.xlsx", os.path.join(os.path.dirname(file_path),
-                                                           'Pivot_table_%s.png' % test_assert), "sheetName", None)
-    os.remove('pivot_table.xlsx')
