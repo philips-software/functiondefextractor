@@ -35,6 +35,13 @@ def check_condition(condition, file_path, splitter=None):
 
 
 def get_pivot_table_result(data, test_assert, splitter, file_path):
+    """ This function creates a pivot table for easy analysis
+        and also number of occurances in the specific function code
+        @parameters
+        data: generated pattern dataframe
+        test_assert: pattern key word (Ex: @staticmethod, @Test, etc.)
+        splitter: key to split statement in pivot table
+        file_path: Input xlsx file used for searching pattern"""
     if splitter is not None:
         data["%s Statements" % test_assert] = data["%s Statements" % test_assert].apply(lambda x: x.split(splitter)[0])
     data_table = data.groupby("%s Statements" % test_assert).count().iloc[:, 1]
@@ -50,6 +57,3 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     excel2img.export_img(r"pivot_table.xlsx", os.path.join(os.path.dirname(file_path),
                                                            'Pivot_table_%s.png' % test_assert), "sheetName", None)
     os.remove('pivot_table.xlsx')
-
-
-check_condition("assert", r"C:\Users\320074769\Downloads\funcDefExtractResult_18-32-03_01_07_2020_test.xlsx", "(")
