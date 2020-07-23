@@ -6,7 +6,6 @@ import pandas as pd
 import excel2img
 
 
-
 def check_condition(condition, file_path, splitter=None):
     """ This function does the pattern match check, line containing the pattern will be extracted to output
         and also number of occurances in the specific function code
