@@ -51,7 +51,7 @@ jobs:
         python3 test_resource/cyclo_gate.py --c 7 #Allowed cyclomatic complexity is less than 7
     - name: Dead Code
       run: |
-        python3 -m vulture functiondefextractor
+        python3 -m vulture functiondefextractor --min-confidence 100
     - name: Tests & Coverage
       run: |
         pytest test --cov-config=.coveragerc --cov=functiondefextractor
