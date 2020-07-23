@@ -53,6 +53,6 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
                             % test_assert.strip("@"), engine='xlsxwriter')
     data.to_excel(writer, sheet_name='Data')
     data_table.to_excel(writer, sheet_name='Pivot Table')
-    data_table.index.name = None
+    data_table = data_table.rename_axis(None)
     data_table.to_html(html_file_path)
     writer.save()
