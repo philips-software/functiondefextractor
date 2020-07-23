@@ -47,7 +47,6 @@ jobs:
 
     - name: Cyclomatic complexity
       run: |
-        python3 -m pip install excel2img
         python3 -m lizard functiondefextractor -X> CC.xml
         python3 test_resource/cyclo_gate.py --c 7 #Allowed cyclomatic complexity is less than 7
     - name: Dead Code
