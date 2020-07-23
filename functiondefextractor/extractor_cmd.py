@@ -58,6 +58,12 @@ def create_parser(args):
                              default=None,
                              help='condition to analyse against extracted methods')
 
+    func_parser.add_argument('--splitter',
+                             metavar='--s',
+                             type=str,
+                             default=None,
+                             help='key to split the extracted statements to generate a pivot table for easy analysis')
+
     # ...Create your parser as you like...
     return func_parser.parse_args(args)
 
@@ -92,4 +98,4 @@ if __name__ == '__main__':
                    , ARGS.reportpath)
     else:
         validate_inputs(ARGS.excelfilepath, "Excel file")
-        check_condition(ARGS.conditionchecker, ARGS.excelfilepath)
+        check_condition(ARGS.conditionchecker, ARGS.excelfilepath, ARGS.splitter)

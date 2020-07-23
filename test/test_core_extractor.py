@@ -162,7 +162,10 @@ class SimpleTest(unittest.TestCase):
         df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
         df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
         self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
+        self.assertTrue(os.path.isfile(os.path.join(os.path.dirname(__file__), os.pardir,
+                                                    "test_resource", "Pivot_table_@Test.png")))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_@Test.png"))
 
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""

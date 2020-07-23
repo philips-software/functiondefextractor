@@ -2,6 +2,7 @@ Enter valid repository path
 usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
                         [--funcstartwith --f] [--reportpath --r]
                         [--excelfilepath --e] [--conditionchecker --c]
+                        [--splitter --s]
 
 Function Definition Extractor
 
@@ -16,3 +17,5 @@ optional arguments:
   --excelfilepath --e   Input excel file path
   --conditionchecker --c
                         condition to analyse against extracted methods
+  --splitter --s        key to split the extracted statements to generate a
+                        pivot table for easy analysis
