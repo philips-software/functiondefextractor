@@ -25,7 +25,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install excel2img
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Aspell install
       run: |
@@ -48,6 +47,7 @@ jobs:
 
     - name: Cyclomatic complexity
       run: |
+        python3 -m pip install excel2img
         python3 -m lizard functiondefextractor -X> CC.xml
         python3 test_resource/cyclo_gate.py --c 7 #Allowed cyclomatic complexity is less than 7
     - name: Dead Code
