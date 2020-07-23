@@ -2,8 +2,9 @@
 based on given condition"""
 import os
 
-import excel2img
 import pandas as pd
+import excel2img
+
 
 
 def check_condition(condition, file_path, splitter=None):
