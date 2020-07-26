@@ -90,7 +90,7 @@ class SimpleTest(unittest.TestCase):
         df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
         df2_list["Code"] = df2_list["Code"].str.replace(os.linesep, "")
         df2_list["Code"] = df2_list["Code"].str.replace("\r", "")
-        self.assertEqual(df1_list["Code"].values.tolist(), df2_list["Code"].values.tolist())
+        self.assertEqual(df1_list["Code"].values.tolist().sort(), df2_list["Code"].values.tolist().sort())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "expeccodeextractor_T_T_A.xlsx"))
 
     def test_process_annot(self):
@@ -168,7 +168,8 @@ class SimpleTest(unittest.TestCase):
         df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
         df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
         self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
-        self.assertTrue(df1_pivot_table[0].equals(df2_pivot_table[0]))
+        self.assertEqual(df1_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist(),
+                         df2_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_Test.html"))
 
