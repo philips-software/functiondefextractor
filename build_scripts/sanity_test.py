@@ -3,8 +3,8 @@ script to conduct sanity test"""
 import os
 import unittest
 import sys
-from test.verify_path import FunctionalTestVerification  # pylint: disable=E0401
-from subprocess_calls import call_subprocess
+from test.verify_path import FunctionalTestVerification  # pylint: disable=C0413
+from subprocess_calls import call_subprocess  # pylint: disable=C0413
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "test"))
 
