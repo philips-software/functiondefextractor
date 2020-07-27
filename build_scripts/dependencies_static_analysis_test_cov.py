@@ -35,7 +35,7 @@ def check_lint():
     """
     function check the repo for any python linting errors
     """
-    call_subprocess("python3 -m pylint similarity_processor/ test/ build_scripts/ ")
+    call_subprocess("python3 -m pylint functiondefextractor/ test/ build_scripts/ ")
     print("Stage linting -- COMPLETED & PASSED  --")
 
 
@@ -69,7 +69,7 @@ def check_cyclomatic_complexity():
     """
     checks the repo for function with cyclomatic complexity , fails if value is greater than 6
     """
-    call_subprocess("python3 -m lizard similarity_processor -X> CC.xml")
+    call_subprocess("python3 -m lizard functiondefextractor -X> CC.xml")
     call_subprocess("python3 build_scripts/cyclo_gate.py --c 6")
     print("Stage cyclomatic complexity detection -- COMPLETED & PASSED  --")
 
@@ -79,7 +79,7 @@ def check_dead_code():
     checks the repo for dead code with minimum confidence 70
     """
     call_subprocess("python3 -m vulture --min-confidence 70 "
-                    "similarity_processor test build_scripts whitelist.py")
+                    "functiondefextractor test build_scripts whitelist.py")
     print("Stage dead code detection -- COMPLETED & PASSED  --")
 
 
@@ -95,7 +95,7 @@ def test_coverage():
     """
     executes the tests and gates the coverage for greater than 95
     """
-    call_subprocess('python3 -m pytest test --cov-config=.coveragerc --cov-report "html" --cov=similarity_processor')
+    call_subprocess('python3 -m pytest test --cov-config=.coveragerc --cov-report "html" --cov=functiondefextractor')
     call_subprocess("coverage report --fail-under=95")
     call_subprocess("codecov")
     print("Stage test & coverage -- COMPLETED & PASSED --")
