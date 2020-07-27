@@ -17,7 +17,7 @@ def install_aspell():
         print("Please install and configure Aspell for english")
 
 
-def install_npm_packages():
+def install_npm_ctags_packages():
     """
     Installs jscpd and configure for english
     """
@@ -26,9 +26,11 @@ def install_npm_packages():
         call_subprocess("sudo npm install -g jscpd@3.2.1")
         call_subprocess("sudo npm i -g yaml-lint@1.2.4")
         call_subprocess("sudo npm i -g markdownlint-cli@0.23.1")
-        print("Stage Install jscpd, markdownlint & ymllint -- COMPLETED & PASSED --")
+        call_subprocess("sudo apt-get install ctags")
+        call_subprocess('export PATH="$PATH:/usr/bin/ctags"')
+        print("Stage Install jscpd, ctags, markdownlint & ymllint -- COMPLETED & PASSED --")
     else:
-        print("Please install and configure jscpd, markdownlint & ymllint")
+        print("Please install and configure jscpd, ctags, markdownlint & ymllint")
 
 
 def check_lint():
