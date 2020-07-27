@@ -116,7 +116,7 @@ def mutation_testing():
 if __name__ == "__main__":
     install_pip()
     install_aspell()
-    install_npm_packages()
+    install_npm_ctags_packages()
     check_lint()
     check_yml_linting()
     check_md_linting()
