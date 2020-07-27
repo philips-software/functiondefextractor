@@ -80,7 +80,7 @@ class SimpleTest(unittest.TestCase):
                                "expeccodeextractor_T_T_A_D.xlsx"))
 
     def test_process_extract(self):
-        """Function to test the complete end to end process of function definition extractor (True False annotation)"""
+        """Function to test the complete end to end process of function definition extractor"""
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), None, None)
         self.__write_xlsx(dataframe, "expeccodeextractor_T_T_A")
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
