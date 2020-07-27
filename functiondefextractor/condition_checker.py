@@ -7,7 +7,7 @@ import pandas as pd
 
 def check_condition(condition, file_path, splitter=None):
     """ This function does the pattern match check, line containing the pattern will be extracted to output
-        and also number of occurances in the specific function code
+        and also number of occurrences in the specific function code
         @parameters
         condition: pattern key word (Ex: @staticmethod, @Test, etc.)
         file_path: Input xlsx file used for searching pattern"""
@@ -34,7 +34,7 @@ def check_condition(condition, file_path, splitter=None):
 
 def get_pivot_table_result(data, test_assert, splitter, file_path):
     """ This function creates a pivot table for easy analysis
-        and also number of occurances in the specific function code
+        and also number of occurrences in the specific function code
         @parameters
         data: generated pattern dataframe
         test_assert: pattern key word (Ex: @staticmethod, @Test, etc.)

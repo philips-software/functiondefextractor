@@ -70,15 +70,15 @@ def check_cyclomatic_complexity():
     checks the repo for function with cyclomatic complexity , fails if value is greater than 6
     """
     call_subprocess("python3 -m lizard functiondefextractor -X> CC.xml")
-    call_subprocess("python3 build_scripts/cyclo_gate.py --c 6")
+    call_subprocess("python3 build_scripts/cyclo_gate.py --c 7")
     print("Stage cyclomatic complexity detection -- COMPLETED & PASSED  --")
 
 
 def check_dead_code():
     """
-    checks the repo for dead code with minimum confidence 70
+    checks the repo for dead code with minimum confidence 100
     """
-    call_subprocess("python3 -m vulture --min-confidence 70 "
+    call_subprocess("python3 -m vulture --min-confidence 100 "
                     "functiondefextractor test build_scripts whitelist.py")
     print("Stage dead code detection -- COMPLETED & PASSED  --")
 
