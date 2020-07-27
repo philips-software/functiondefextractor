@@ -43,16 +43,16 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     if splitter is not None:
         data["%s Statements" % test_assert] = data["%s Statements" % test_assert].apply(lambda x: x.split(splitter)[0])
     data_table = data.groupby("%s Statements" % test_assert).count().iloc[:, 1]
-    if data_table.index[0] == '':
-        data_table = data_table.drop([data_table.index[0]])
     data_table = data_table.to_frame()
     data_table = data_table.rename({'Count of %s in function' % test_assert:
                                         'Different %s pattern counts' % test_assert}, axis='columns')
+    data_table = data_table.reset_index()
+    if data_table.iat[0, 0] == '':  # pragma: no mutate
+        data_table = data_table.drop([data_table.index[0]])
     html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
     writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
                             % test_assert.strip("@"), engine='xlsxwriter')
-    data.to_excel(writer, sheet_name='Data')
-    data_table.to_excel(writer, sheet_name='Pivot Table')
-    data_table = data_table.rename_axis(None)
+    data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
+    data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
     data_table.to_html(html_file_path)
     writer.save()

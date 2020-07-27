@@ -161,17 +161,25 @@ class SimpleTest(unittest.TestCase):
                                               "Pattern_Result.xlsx")).sort_values('Uniq ID')
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "Pattern_Result_Test.xlsx")).sort_values('Uniq ID')
-        df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                                    "Test_pivot_table_Test.html"))
-        df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                                    "Pivot_table_Test.html"))
         df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
         df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
         self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
-        self.assertEqual(df1_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist(),
-                         df2_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist())
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_Test.html"))
+
+    def test_pivot_table(self):
+        """Function to test pivot table"""
+        check_condition("assert",
+                        os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_test.xlsx"), "(")
+        df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                    "Test_Pivot_table_assert.html"))
+        df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                    "Pivot_table_assert.html"))
+        self.assertEqual(df1_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist(),
+                         df2_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist())
+        self.assertEqual(str(df1_pivot_table[0].columns), str(df2_pivot_table[0].columns))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_assert.xlsx"))
+        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_assert.html"))
 
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""

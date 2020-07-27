@@ -12,6 +12,7 @@ import extractor_log as cl
 LOG = cl.get_logger()
 DELTA_BODY = []
 UID_LIST = []
+FILE_TYPE = [".java", ".cpp", ".c", ".cs", ".py", ".ts", ".js"]  # pragma: no mutate
 
 
 def get_file_names(dir_path):
@@ -41,7 +42,7 @@ def run_ctags_cmd(file_ext, file_names, find):
         This function returns ctags output"""
     if file_ext.upper() == "PY":
         cmd = "ctags -x " + file_names
-    elif file_ext.upper() == "TS" or file_ext.upper() == "JS":
+    elif file_ext.upper() in ["TS", "JS"]:
         cmd = "ctags --language-force=java -x " + file_names + "| grep %s " % find
     else:
         cmd = "ctags -x " + file_names + "| grep %s " % find
@@ -57,15 +58,8 @@ def get_function_names(file_names):
         This function returns function/method names and line numbers of all the given files"""
     file_ext = str(os.path.basename(file_names).split('.')[1])
     find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
-        else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"
+        else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"  # pragma: no mutate
     proc = run_ctags_cmd(file_ext, file_names, find)
-    # if file_ext.upper() == "PY":
-    #     cmd = "ctags -x " + file_names
-    # elif file_ext.upper() == "TS" or file_ext.upper() == "JS":
-    #     cmd = "ctags --language-force=java -x " + file_names + "| grep %s " % find
-    # else:
-    #     cmd = "ctags -x " + file_names + "| grep %s " % find
-    # proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process = str(proc.stdout.read(), 'utf-8')
     return process_function_names(process, find, file_names)
 
@@ -77,7 +71,7 @@ def process_function_names(func_data, find, file_names):
         find: keyword of method type(member/function/class/method)
         @return
         This function returns list of function names and line numbers"""
-    if func_data.strip() == "":
+    if func_data.strip() == "":  # pragma: no mutate
         LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
     if func_data is not None:
         process_list = re.findall(r'\w+', func_data)
@@ -89,7 +83,7 @@ def process_function_names(func_data, find, file_names):
         return function_list, line_numbers
     else:
         print("Input files doesn't have valid methods")  # pragma: no mutate
-        sys.exit(1)
+        sys.exit(1)  # pragma: no mutate
 
 
 def get_sorted_func_list(process_list, val):
@@ -147,7 +141,7 @@ def get_file_content(filename):
         filename: Path to the file
         @return
         This function returns content of the file inputed"""
-    with open(filename, encoding='utf-8', errors='ignore') as file_data:
+    with open(filename, encoding='utf-8', errors='ignore') as file_data:  # pragma: no mutate
         return file_data.readlines()
 
 
@@ -179,7 +173,7 @@ def process_annotation(annot):
     annot_start = annot[0]
     annot_end = annot[len(annot) - 1]
     if annot_end.isalpha():
-        annot_end = None
+        annot_end = None  # pragma: no mutate
     return annot_start, annot_end
 
 
@@ -192,7 +186,7 @@ def process_annot_method_body(annot, data, filename, line_num):
         data: Content of the given file
         @return
         This function returns function/method definitions that has the given annotation"""
-    ret_val = "continue"
+    ret_val = "continue"  # pragma: no mutate
     annot_start, annot_end = process_annotation(annot)
     if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start) \
             .strip(annot_end).upper().split(",") and data.strip().startswith(annot_start):
@@ -209,7 +203,8 @@ def check_py_annot(file_name, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns function/method names that has the given annotation"""
-    line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
+    line_data = list(
+        [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
     val = 0
     if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
         annot = "def test_"
@@ -251,7 +246,7 @@ def get_func_body(filename, line_num):
     cnt_braket = 0
     found_start = False
 
-    with open(filename, "r", encoding='utf-8', errors='ignore') as files:
+    with open(filename, "r", encoding='utf-8', errors='ignore') as files:  # pragma: no mutate
         for i, line in enumerate(files):
             if i >= (line_num - 1):
                 code += line
@@ -275,7 +270,8 @@ def get_py_func_body(line_numbers, file_name, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns python function/method definitions in the given files"""
-    line_data = list([line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])
+    line_data = list([line.rstrip() for line
+                      in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
     data, data_func_name = process_py_methods(file_name, line_numbers, line_data)
     if annot is not None:
         data_func_name, data = get_py_annot_methods(file_name, data_func_name, data, annot)
@@ -366,12 +362,11 @@ def filter_files(list_files):
     list_files: List of all files that the given repository contains
     @return
     This function returns the list of required file(.java, .cpp, .c, .cs, .py) paths """
-    ext = [".java", ".cpp", ".c", ".cs", ".py", ".ts", ".js"]
     local_files = []
     for files in list_files:
         extension = os.path.splitext(files)
         if len(extension).__trunc__() > 0:
-            if extension[1] in ext:
+            if extension[1] in FILE_TYPE:
                 local_files.append(files)
     return local_files
 
@@ -380,7 +375,8 @@ def get_delta_lines(file_name, annot, delta):
     """ Function to get + and - delta number of lines from the annoted method/function
             @parameters
             filename, annot, delta: Path to the file, required annotation, required lines from method """
-    line_data = list(filter(None, [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')]))
+    line_data = list(filter(None, [line.rstrip() for
+                                   line in open(file_name, encoding='utf-8', errors='ignore')]))  # pragma: no mutate
     data = []
     for num, line in enumerate(line_data, 1):
         process_delta_lines_body(annot, line, delta, num, line_data, data, file_name)
@@ -506,7 +502,7 @@ def get_log_data(line):
     ini_path = os.path.abspath(os.path.join
                                (os.path.dirname(__file__), os.pardir))
     file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
-    file_variable = open(file_name, encoding='utf-8', errors='ignore')
+    file_variable = open(file_name, encoding='utf-8', errors='ignore')  # pragma: no mutate
     all_lines_variable = file_variable.readlines()
     string = all_lines_variable[-line]
     string = string[0: 0:] + string[23 + 1::]
@@ -523,7 +519,7 @@ def remove_comments(dataframe):
     data = ""
     for i in range(len(dataframe).__trunc__()):
         for line in dataframe.iat[i, 0].splitlines():
-            if not line.strip().startswith(("#", "//", "/*", "*", "*/")):
+            if not line.strip().startswith(("#", "//", "/*", "*", "*/")):  # pragma: no mutate
                 data = data + line.strip().split(";")[0] + os.linesep
         filtered_code.append(data)
         data = ""
@@ -538,17 +534,16 @@ def get_report(data, path):
                 path: Report folder path"""
     method_data = [[] for _ in range(7)]
     method_name = [[] for _ in range(7)]
-    file_type = ['.JAVA', '.CS', '.C', '.CPP', '.PY', '.TS', '.JS']
     for i in range(len(data).__trunc__()):
         extension = os.path.splitext(data.index[i])
-        res = str([ext for ext in file_type if ext == str(extension[1]).split("_")[0].upper()])
-        if str(res) != "[]":
-            method_data[int(file_type.index(res.strip("[]''")))].append(data.iat[i, 0])
-            method_name[int(file_type.index(res.strip("[]''")))].append(data.index[i])
-    return write_report_files(file_type, path, method_name, method_data)
+        res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
+        if str(res) != "[]":  # pragma: no mutate
+            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])
+            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.index[i])
+    return write_report_files(path, method_name, method_data)
 
 
-def write_report_files(file_type, path, method_name, method_data):
+def write_report_files(path, method_name, method_data):
     """ This function write the dataframe to excel files
         @parameters
         path: Report folder path
@@ -556,14 +551,14 @@ def write_report_files(file_type, path, method_name, method_data):
         method_data: extracted method definitions
         @return
         returns a dataframe with all the extracted method names and definitions"""
-    for i in range(len(file_type).__trunc__()):
+    for i in range(len(FILE_TYPE).__trunc__()):
         dataframe = pd.DataFrame(list(zip(method_name[i], method_data[i])),
                                  columns=['Uniq ID', 'Code']).set_index("Uniq ID")
         if len(dataframe).__trunc__() != 0:
-            writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" +
-                                                             str(file_type[i]).strip(".") + "_" +
-                                                             str(datetime.datetime.fromtimestamp(time.time()).strftime(
-                                                                 '%H-%M-%S_%d_%m_%Y'))), engine='xlsxwriter')
+            writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(".")
+                                                             + "_" + str(datetime.datetime.fromtimestamp(time.time()).
+                                                                         strftime('%H-%M-%S_%d_%m_%Y'))),
+                                    engine='xlsxwriter')  # pragma: no mutate
             dataframe.to_excel(writer, sheet_name="funcDefExtractResult")
             writer.save()
     return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code']).set_index("Uniq ID")
@@ -576,9 +571,9 @@ def validate_input_paths(path):
         print("Enter Valid Path", path)  # pragma: no mutate
         LOG.info("Enter valid path %s", path)  # pragma: no mutate
         sys.stdout.flush()
-        script = None
+        script = None  # pragma: no mutate
         cmd = 'python %s --h' % script
-        subprocess.call(cmd, shell=True)
+        subprocess.call(cmd, shell=True)  # pragma: no mutate
         return "Enter valid path"
 
 
@@ -594,7 +589,7 @@ def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
     if delta is not None and annot is None:
         return "delta(--d) should be in combination with annotation(--a)"
     if validate_input_paths(path_loc):
-        return "Enter valid path"
+        return "Enter valid path"  # pragma: no mutate
     LOG.info("Input repository path validated successfully")  # pragma: no mutate
     if report_folder is None:
         report_folder = path_loc

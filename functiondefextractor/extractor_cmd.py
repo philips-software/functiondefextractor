@@ -80,20 +80,20 @@ def validate_inputs(arg_path, repo):
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))
         cmd = 'python %s --h' % script
-        subprocess.call(cmd, shell=True)
-        sys.exit(1)
+        subprocess.call(cmd, shell=True)  # pragma: no mutate
+        sys.exit(1)  # pragma: no mutate
 
 
 if __name__ == '__main__':
     # Execute the parse_args() method
     ARGS = create_parser(sys.argv[1:])
     if ARGS.delta is not None and ARGS.annot is None:
-        print("delta(--d) should be in combination with annotation(--a)")
+        print("delta(--d) should be in combination with annotation(--a)")  # pragma: no mutate
         raise SystemExit
     if ARGS.conditionchecker is None:
         validate_inputs(ARGS.path, "repository")
         ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
-        validate_inputs(ARGS.reportpath, "report folder")
+        validate_inputs(ARGS.reportpath, "report folder")  # pragma: no mutate
         get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath)
                    , ARGS.reportpath)
     else:
