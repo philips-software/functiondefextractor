@@ -3,10 +3,10 @@ script to conduct sanity test"""
 import os
 import unittest
 import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "test"))
 from test.verify_path import FunctionalTestVerification  # pylint: disable=E0401
 from subprocess_calls import call_subprocess
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "test"))
 
 
 class SanityTestVerification(unittest.TestCase):
