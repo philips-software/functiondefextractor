@@ -61,3 +61,4 @@ wikipedia
 CHANGELOG
 repo
 src
+MERCHANTABILITY

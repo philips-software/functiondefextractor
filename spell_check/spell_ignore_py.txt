@@ -16,3 +16,5 @@ annoted
 cpp
 lamida
 dir
+inputed
+splitter
