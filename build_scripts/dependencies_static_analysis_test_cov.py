@@ -54,8 +54,8 @@ def check_md_linting():
     function check the repo for any yml linting errors
     """
     print("----TODO----- Markdown linting")
-    # call_subprocess("markdownlint *.md ")
-    # print("Stage linting md files -- COMPLETED & PASSED  --")
+    call_subprocess("markdownlint *.md ")
+    print("Stage linting md files -- COMPLETED & PASSED  --")
 
 
 def check_code_duplication():
@@ -125,4 +125,4 @@ if __name__ == "__main__":
     check_dead_code()
     check_spelling()
     test_coverage()
-    mutation_testing()
+    # mutation_testing()

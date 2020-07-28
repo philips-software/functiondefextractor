@@ -21,6 +21,8 @@ class SanityTestVerification(unittest.TestCase):
         Function which executes the sanity test
         """
         input_file = os.path.join(self.file_path, "test_resource", "test_repo")
+        call_subprocess("sudo apt-get install ctags")
+        call_subprocess('export PATH="$PATH:/usr/bin/ctags"')
         call_subprocess('python3 -m functiondefextractor.extractor_cmd --p "%s"' % input_file)
         self.verify_func_obj.verify_functional_test()
         print("Sanity test is COMPLETED & PASSED")
