@@ -9,7 +9,7 @@ def find_installer():
     """ Function finds the installer full name based on the substring"""
     proj_dist = os.path.join(os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir))), "dist")
     installer_list = os.listdir(proj_dist)
-    return [item for item in installer_list if "functiondefextrctor" in item]
+    return [item for item in installer_list if "functiondefextractor" in item]
 
 
 def install(package):
