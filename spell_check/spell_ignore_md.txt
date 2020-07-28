@@ -64,3 +64,10 @@ src
 MERCHANTABILITY
 SuppressWarnings
 excelfile
+Supress
+TypeScript
+dataframe
+github
+thirdparty
+xlrd
+xlsxwriter
