@@ -62,3 +62,5 @@ CHANGELOG
 repo
 src
 MERCHANTABILITY
+SuppressWarnings
+excelfile
