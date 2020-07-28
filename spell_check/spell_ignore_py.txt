@@ -18,3 +18,4 @@ lamida
 dir
 inputed
 splitter
+fname
