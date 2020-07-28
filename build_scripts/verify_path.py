@@ -5,7 +5,7 @@ import os
 import sys
 import unittest
 
-sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "test"))
 from test.test_core_extractor import SimpleTest  # pylint: disable=C0413
 
 
