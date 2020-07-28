@@ -4,9 +4,9 @@ file to verify the functional tests."""
 import os
 import sys
 import unittest
-from test.test_core_extractor import SimpleTest
 
 sys.path.append(os.path.dirname(__file__))
+from test.test_core_extractor import SimpleTest  # pylint: disable=C0413
 
 
 class FunctionalTestVerification(unittest.TestCase):
