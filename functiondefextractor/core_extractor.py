@@ -42,11 +42,11 @@ def run_ctags_cmd(file_ext, file_names, find):
         @return
         This function returns ctags output"""
     if file_ext.upper() == "PY":
-        cmd = "ctags -x " + file_names
+        cmd = 'ctags -x "%s"' % file_names
     elif file_ext.upper() in ["TS", "JS"]:
-        cmd = "ctags --language-force=java -x " + file_names + "| grep %s " % find
+        cmd = 'ctags --language-force=java -x "%s" | grep %s' % (file_names, find)
     else:
-        cmd = "ctags -x " + file_names + "| grep %s " % find
+        cmd = 'ctags -x "%s" | grep %s' % (file_names, find)
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     return proc
 
@@ -505,9 +505,7 @@ def get_log_data(line):
     file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
     file_variable = open(file_name, encoding='utf-8', errors='ignore')  # pragma: no mutate
     all_lines_variable = file_variable.readlines()
-    string = all_lines_variable[-line]
-    string = string[0: 0:] + string[23 + 1::]
-    return string
+    return all_lines_variable[-line]
 
 
 def remove_comments(dataframe):
@@ -533,8 +531,8 @@ def get_report(data, path):
                 @parameters
                 data: extracted methods in dataframe format
                 path: Report folder path"""
-    method_data = [[] for _ in range(7)]
-    method_name = [[] for _ in range(7)]
+    method_data = [[] for _ in range(len(FILE_TYPE))]
+    method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
         extension = os.path.splitext(data.index[i])
         res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
@@ -632,7 +630,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
         if "Warning:" in get_log_data(1):
-            LOG.info("Failed to extracted %s", func_name)  # pragma: no mutate
+            print("Failed to extracted %s", func_name)  # pragma: no mutate
         else:
             LOG.info("Successfully extracted %s", func_name)  # pragma: no mutate
     end = time.time()

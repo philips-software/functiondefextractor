@@ -11,11 +11,14 @@ def check_condition(condition, file_path, splitter=None):
         @parameters
         condition: pattern key word (Ex: @staticmethod, @Test, etc.)
         file_path: Input xlsx file used for searching pattern"""
-    extension = os.path.splitext(file_path)
-    if extension[1].upper() != ".XLSX":
-        return "Enter Valid Excel File"
+    if str(type(file_path)) == "<class 'pandas.core.frame.DataFrame'>":
+        data = file_path
+    else:
+        extension = os.path.splitext(file_path)
+        if extension[1].upper() != ".XLSX":
+            return "Enter Valid Excel File"
+        data = pd.read_excel(file_path)
     test_assert = condition
-    data = pd.read_excel(file_path)
     if ['Uniq ID'] not in data.columns.ravel():
         return "Couldn't find vaild data"
     data = pd.DataFrame(data, columns=['Uniq ID', 'Code']).set_index("Uniq ID")
@@ -47,6 +50,7 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table = data_table.rename({'Count of %s in function' % test_assert:
                                         'Different %s pattern counts' % test_assert}, axis='columns')
     data_table = data_table.reset_index()
+    data_table["%s Statements" % test_assert] = data_table["%s Statements" % test_assert].str.wrap(200)
     if data_table.iat[0, 0] == '':  # pragma: no mutate
         data_table = data_table.drop([data_table.index[0]])
     html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")

@@ -184,10 +184,10 @@ class SimpleTest(unittest.TestCase):
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""
         validate_inputs(os.getcwd(), "sample_path")
-        self.assertEqual("Input path validated", get_log_data(1).strip())
+        self.assertTrue("Input path validated" in get_log_data(1).strip())
         with patch('sys.exit') as exit_mock:
             validate_inputs("no/path", "sample_path")
-            self.assertEqual("Enter valid sample_path path", get_log_data(1).strip())
+            self.assertTrue("Enter valid sample_path path" in get_log_data(1).strip())
             assert exit_mock
 
 
