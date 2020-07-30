@@ -1,5 +1,5 @@
-"""This file contains a function required for patterns in the extracted method/function definitions
-based on given condition"""
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
+
 import os
 
 import pandas as pd

@@ -1,5 +1,4 @@
-""" This file does the  test of the "Text similarity processor
-logging and command line """
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
 
 import unittest
 import os
@@ -66,7 +65,7 @@ class ParserAndLogTest(unittest.TestCase):
         """Test function to test the validate_inputs function"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
                                               "extractor_cmd.py"))
-        cmd = 'python %s --p %s' %(script, os.path.join(TestResource.tst_resource_folder, "wrong"))
+        cmd = 'python %s --p %s' % (script, os.path.join(TestResource.tst_resource_folder, "wrong"))
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"), "w")
         subprocess.call(cmd, stdout=tmpfile, shell=True)

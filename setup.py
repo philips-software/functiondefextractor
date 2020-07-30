@@ -36,5 +36,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=required,
-    python_requires='>=3.8',
+    python_requires='>=3.7',
 )

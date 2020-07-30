@@ -1,8 +1,8 @@
-""" This file holds the unit test cases """
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
+
 import os
 import unittest
 from unittest.mock import patch
-
 
 from test.test_resource import TestResource
 import pandas as pd

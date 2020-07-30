@@ -1,8 +1,9 @@
 """Koninklijke Philips N.V., 2019 - 2020. All rights reserved.
 build script to building the similarity tool"""
 import platform
-from subprocess_calls import call_subprocess
+
 from install_dependencies import install_pip
+from subprocess_calls import call_subprocess
 
 
 def install_aspell():
@@ -54,8 +55,8 @@ def check_md_linting():
     function check the repo for any yml linting errors
     """
     print("----TODO----- Markdown linting")
-    # call_subprocess("markdownlint *.md ")
-    # print("Stage linting md files -- COMPLETED & PASSED  --")
+    call_subprocess("markdownlint *.md ")
+    print("Stage linting md files -- COMPLETED & PASSED  --")
 
 
 def check_code_duplication():

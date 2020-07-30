@@ -1,4 +1,5 @@
-""" This file holds the test resources for testing """
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
+
 import os
 
 

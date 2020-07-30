@@ -1,4 +1,5 @@
-""" File provide command line interface for the text similarity index processor """
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
+
 import argparse
 import os
 import subprocess

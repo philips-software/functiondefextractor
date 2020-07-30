@@ -1,4 +1,5 @@
-"""This file contains all the functions required for extracting method/function definitions from the given repository"""
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
+
 import datetime
 import subprocess
 import os
