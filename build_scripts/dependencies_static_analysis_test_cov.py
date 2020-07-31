@@ -136,4 +136,4 @@ if __name__ == "__main__":
     check_dead_code()
     check_spelling()
     test_coverage()
-    # mutation_testing()
+    mutation_testing()
