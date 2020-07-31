@@ -60,4 +60,3 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
     data_table.to_html(html_file_path)
     writer.save()
-    print("Hai")

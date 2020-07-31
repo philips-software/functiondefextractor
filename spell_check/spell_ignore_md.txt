@@ -20,7 +20,6 @@ pydoc
 pylint
 pytest
 svg
-travis
 txt
 xlsx
 Brijesh
@@ -68,6 +67,10 @@ Supress
 TypeScript
 dataframe
 github
-thirdparty
+FunctionName
+JavaScript
+SupressWarning
 xlrd
 xlsxwriter
+FileName
+travis
