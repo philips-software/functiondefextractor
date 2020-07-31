@@ -52,7 +52,7 @@ def run_ctags_cmd(file_ext, file_names, find):
 
 
 def get_function_names(file_names):
-    """ Function to get method/function names from the input files in the given repo
+    """ Function to get method/function names from the input files in the given repository
         @parameters
         file_names: Path to the file
         @return

@@ -1,6 +1,6 @@
 # Function Extractor
 
-[![Build Status](https://travis-ci.com/philips-software/functiondefextractor.svg?branch=master)](https://travis-ci.com/philips-software/functiondefextractor)
+![Python application](https://github.com/philips-software/TextSimilarityProcessor/workflows/Python%20application/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/gh/philips-software/functiondefextractor/branch/master/graph/badge.svg)](https://codecov.io/gh/philips-software/functiondefextractor)
 
@@ -28,7 +28,7 @@ Advantage of using such function extractions are,
 
 - Identify function similarity  
 
-- Identify pattern check (Supress warnings, Asset, etc...)
+- Identify pattern check (Supresswarnings, Assert, etc...)
   
 ## Dependencies
 

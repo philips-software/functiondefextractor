@@ -18,7 +18,7 @@ def install_aspell():
         print("Please install and configure Aspell for english")
 
 
-def install_npm_ctags_packages():
+def install_npm_packages():
     """
     Installs jscpd and configure for english
     """
@@ -27,11 +27,21 @@ def install_npm_ctags_packages():
         call_subprocess("sudo npm install -g jscpd@3.2.1")
         call_subprocess("sudo npm i -g yaml-lint@1.2.4")
         call_subprocess("sudo npm i -g markdownlint-cli@0.23.1")
+        print("Stage Install jscpd, markdownlint & ymllint -- COMPLETED & PASSED --")
+    else:
+        print("Please install and configure jscpd, markdownlint & ymllint")
+
+
+def install_ctags_package():
+    """
+    Installs ctags and configure it
+    """
+    if str(platform.system()).upper() == "LINUX":
         call_subprocess("sudo apt-get install ctags")
         call_subprocess('export PATH="$PATH:/usr/bin/ctags"')
-        print("Stage Install jscpd, ctags, markdownlint & ymllint -- COMPLETED & PASSED --")
+        print("Stage Install ctags -- COMPLETED & PASSED --")
     else:
-        print("Please install and configure jscpd, ctags, markdownlint & ymllint")
+        print("Please install and configure ctags")
 
 
 def check_lint():
@@ -54,7 +64,6 @@ def check_md_linting():
     """
     function check the repo for any yml linting errors
     """
-    print("----TODO----- Markdown linting")
     call_subprocess("markdownlint *.md ")
     print("Stage linting md files -- COMPLETED & PASSED  --")
 
@@ -117,7 +126,8 @@ def mutation_testing():
 if __name__ == "__main__":
     install_pip()
     install_aspell()
-    install_npm_ctags_packages()
+    install_npm_packages()
+    install_ctags_package()
     check_lint()
     check_yml_linting()
     check_md_linting()
@@ -126,4 +136,4 @@ if __name__ == "__main__":
     check_dead_code()
     check_spelling()
     test_coverage()
-    mutation_testing()
+    # mutation_testing()
