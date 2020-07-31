@@ -81,10 +81,10 @@ def process_function_names(func_data, find, file_names):
         function_list = get_sorted_func_list(process_list, val)
         line_numbers = get_func_line_num_list(process_list, val)
         line_numbers.sort()
-        return function_list, line_numbers
     else:
         print("Input files doesn't have valid methods")  # pragma: no mutate
         sys.exit(1)  # pragma: no mutate
+    return function_list, line_numbers
 
 
 def get_sorted_func_list(process_list, val):
@@ -130,10 +130,12 @@ def check_annot(filename, line_num, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns function/method definitions that has the given annotation"""
+    ret_val = None
     if annot is None:
-        return get_func_body(filename, line_num)
+        ret_val = get_func_body(filename, line_num)
     else:
-        return get_annot_methods(filename, line_num, annot)
+        ret_val = get_annot_methods(filename, line_num, annot)
+    return ret_val
 
 
 def get_file_content(filename):
@@ -154,7 +156,6 @@ def get_annot_methods(filename, line_num, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns function/method definitions that has the given annotation"""
-
     file_content = get_file_content(filename)
     iterator = int(line_num) - 2  # Iterating through lines to check for annotations
     for _ in range(int(line_num) - 2):
@@ -246,7 +247,7 @@ def get_func_body(filename, line_num):
     code = ""
     cnt_braket = 0
     found_start = False
-
+    return_val = None
     with open(filename, "r", encoding='utf-8', errors='ignore') as files:  # pragma: no mutate
         for i, line in enumerate(files):
             if i >= (line_num - 1):
@@ -260,7 +261,9 @@ def get_func_body(filename, line_num):
                     cnt_braket -= line.count("}")
 
                 if cnt_braket == 0 and found_start is True:
-                    return code
+                    return_val = code
+                    break
+    return return_val
 
 
 def get_py_func_body(line_numbers, file_name, annot):
@@ -271,15 +274,16 @@ def get_py_func_body(line_numbers, file_name, annot):
         annot: Annotation condition (Ex: @Test)
         @return
         This function returns python function/method definitions in the given files"""
+    func_name = []
+    func_body = []
     line_data = list([line.rstrip() for line
                       in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
     data, data_func_name = process_py_methods(file_name, line_numbers, line_data)
     if annot is not None:
         data_func_name, data = get_py_annot_methods(file_name, data_func_name, data, annot)
     if len(data_func_name).__trunc__() != 0:
-        return process_py_func_body(data, data_func_name)
-    else:
-        return [], []
+        func_name, func_body = process_py_func_body(data, data_func_name)
+    return func_name, func_body
 
 
 def process_py_methods(file_name, line_numbers, line_data):
@@ -537,8 +541,8 @@ def get_report(data, path):
         extension = os.path.splitext(data.index[i])
         res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
         if str(res) != "[]":  # pragma: no mutate
-            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])
-            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.index[i])
+            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
+            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.index[i])  # pylint: disable=E1310
     return write_report_files(path, method_name, method_data)
 
 
@@ -614,7 +618,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
     start = time.time()
-    if type(initialize_values(delta, annot, path_loc, report_folder, functionstartwith)) == str:
+    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith), str):  # pylint: disable=R1705
         return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)

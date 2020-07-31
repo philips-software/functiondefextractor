@@ -20,8 +20,9 @@ class FunctionalTestVerification(unittest.TestCase):
                                                       fname)).sort_values('Uniq ID')
                 df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                                       "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID')
-                df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
                 df2_list["Code"] = df2_list["Code"].str.replace(os.linesep, "")
+                df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
                 df2_list["Code"] = df2_list["Code"].str.replace("\r", "")
-                self.assertEqual(df1_list["Code"].values.tolist().sort(), df2_list["Code"].values.tolist().sort())
+                self.assertEqual(df1_list["Code"].values.tolist().sort(), df2_list["Code"].values.tolist().sort(),
+                                 "Verifying two dataframes")
                 os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", fname))
