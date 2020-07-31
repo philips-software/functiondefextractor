@@ -67,6 +67,8 @@ print(out_put)
 ```
 
 - To extract delta lines(+/-) from code based on annotation/key word.
+Note: If user is unaware of complete annotation use this(annot with delta)
+feature to extract functions else use the above feature.
 
 ```sh
 from functiondefextractor import core_extractor
@@ -76,6 +78,7 @@ print(out_put)
 ```
 
 - To analyse various patterns in the code based on given condition.
+For example to search assert, suppress warnings patterns.
 
 ```sh
 from functiondefextractor import core_extractor
@@ -114,10 +117,9 @@ print(out_put)
 - Using functiondefextractor to extract functions from code would return
  a dataframe with same content as excel file.
 
-- when functiondefextractor is executed to analyse patterns in code, an excel file
+- When functiondefextractor is executed to analyse patterns in code, an excel file
  with multiple sheets would be generated which contains the requested patterns and
- top 10 patterns. Also an html file with pivot table of top 10 patterns
- would be generated.
+ pivot table. Also an html file with pivot table of the same would be generated.
 
 ## Contact
 
