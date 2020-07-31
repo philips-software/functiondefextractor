@@ -5,6 +5,7 @@ from versiontag import get_version
 def get_description(file_name):
     """ replace the license content while creating the package"""
     with open(file_name, "r", encoding="utf8") as fh:
+        next(fh)  # skip the header
         description = fh.read()
         return description
 

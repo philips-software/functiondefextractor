@@ -48,10 +48,9 @@ pip install functiondefextractor
 
 ## Usage & Configuration
 
-### Option 1: To call from script
+### Code
 
-- General usage with out options. The below example script will return a dataframe
- which contains the extracted functions from the given repo/code.
+- General usage with out options.
 
 ```sh
 from functiondefextractor import core_extractor
@@ -59,12 +58,42 @@ out_put = core_extractor.extractor (r"path_to_repo/code")
 print(out_put)
 ```
 
-### Commandline
-
-- General usage with out options
+- To extract functions based on annotation.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd -p path/to/repo
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor (r"path_to_repo/code", annot="@Test")
+print(out_put)
+```
+
+- To extract delta lines(+/-) from code based on annotation/key word.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor (r"path_to_repo/code", annot="@SupressWarning", delta="5")
+print(out_put)
+```
+
+- To analyse various patterns in the code based on given condition.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.check_condition ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
+print(out_put)
+```
+
+### Commandline
+
+- General usage with out options to extract functions from repo.
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+```
+
+- To analyse various patterns in the code based on given condition.
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --c "@Assert" --e path/to/excel/dataframe --s "("
 ```
 
 - Help option can be found at,  
@@ -94,20 +123,6 @@ Note:
 This will return an excel file and pivot table html files which contain
  various assert patterns in the extracted code
 
-### Code
-
-```sh
-from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code")
-# Default value of arguments are annot=None, delta=None
-print(out_put)
-```
-
-```sh
-from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code, annot="@Test", delta="5")
-print(out_put)
-```
 
 ### Output
   
