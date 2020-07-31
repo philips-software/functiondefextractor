@@ -51,7 +51,7 @@ def create_parser(args):
                              metavar='--e',
                              type=str,
                              default=None,
-                             help='Input excel file path')
+                             help='Input excel file path/dataframe')
 
     func_parser.add_argument('--conditionchecker',
                              metavar='--c',

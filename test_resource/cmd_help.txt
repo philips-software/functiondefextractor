@@ -13,7 +13,7 @@ optional arguments:
   --delta --d           Required number of lines at annotated method
   --funcstartwith --f   functions starting with given key word
   --reportpath --r      Input report folder path
-  --excelfilepath --e   Input excel file path
+  --excelfilepath --e   Input excel file path/dataframe
   --conditionchecker --c
                         condition to analyse against extracted methods
   --splitter --s        key to split the extracted statements to generate a

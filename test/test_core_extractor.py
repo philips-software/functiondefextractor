@@ -154,7 +154,7 @@ class SimpleTest(unittest.TestCase):
         res = check_condition("@Test",
                               os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                            "Sample.xlsx"))
-        self.assertEqual(res, "Couldn't find vaild data")
+        self.assertEqual(res, "Couldn't find Uniq ID column")
         check_condition("@Test",
                         os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "codeextractor_annot.xlsx"))
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",

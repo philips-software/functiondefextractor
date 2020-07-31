@@ -5,22 +5,22 @@ import os
 import pandas as pd
 
 
-def check_condition(condition, file_path, splitter=None):
+def check_condition(condition, file_path_dataframe, splitter=None):
     """ This function does the pattern match check, line containing the pattern will be extracted to output
         and also number of occurrences in the specific function code
         @parameters
         condition: pattern key word (Ex: @staticmethod, @Test, etc.)
         file_path: Input xlsx file used for searching pattern"""
-    if str(type(file_path)) == "<class 'pandas.core.frame.DataFrame'>":
-        data = file_path
+    if str(type(file_path_dataframe)) == "<class 'pandas.core.frame.DataFrame'>":
+        data = file_path_dataframe
     else:
-        extension = os.path.splitext(file_path)
+        extension = os.path.splitext(file_path_dataframe)
         if extension[1].upper() != ".XLSX":
             return "Enter Valid Excel File"
-        data = pd.read_excel(file_path)
+        data = pd.read_excel(file_path_dataframe)
     test_assert = condition
     if ['Uniq ID'] not in data.columns.ravel():
-        return "Couldn't find vaild data"
+        return "Couldn't find Uniq ID column"
     data = pd.DataFrame(data, columns=['Uniq ID', 'Code']).set_index("Uniq ID")
     specifier_column = []
     spe_data = ""
@@ -32,7 +32,7 @@ def check_condition(condition, file_path, splitter=None):
         spe_data = ""
     data['Count of %s in function' % test_assert] = data["Code"].str.upper().str.count(test_assert.upper())
     data["%s Statements" % test_assert] = specifier_column
-    get_pivot_table_result(data, test_assert, splitter, file_path)
+    get_pivot_table_result(data, test_assert, splitter, file_path_dataframe)
 
 
 def get_pivot_table_result(data, test_assert, splitter, file_path):
