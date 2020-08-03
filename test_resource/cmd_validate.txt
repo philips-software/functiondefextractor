@@ -1,13 +1,21 @@
-Enter Valid Path
-usage: extractor_cmd.py [-h] [--path --p] [--code --c] [--test --t]
-                        [--annot --a] [--delta --d]
+Enter valid repository path
+usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
+                        [--funcstartwith --f] [--reportpath --r]
+                        [--excelfilepath --e] [--conditionchecker --c]
+                        [--splitter --s]
 
 Function Definition Extractor
 
 optional arguments:
-  -h, --help   show this help message and exit
-  --path --p   the Input folder path
-  --code --c   True/False for source code to be processed?
-  --test --t   True/False for test code to be processed?
-  --annot --a  Annotation condition to get function/method definitions
-  --delta --d  Required number of lines at annotated method
+  -h, --help            show this help message and exit
+  --path --p            the Input folder path
+  --annot --a           Annotation condition to get function/method
+                        definitions
+  --delta --d           Required number of lines at annotated method
+  --funcstartwith --f   functions starting with given key word
+  --reportpath --r      Input report folder path
+  --excelfilepath --e   Input excel file path/dataframe
+  --conditionchecker --c
+                        condition to analyse against extracted methods
+  --splitter --s        key to split the extracted statements to generate a
+                        pivot table for easy analysis

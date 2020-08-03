@@ -139,12 +139,12 @@ disable=print-statement,
         deprecated-sys-function,
         exception-escape,
         comprehension-escape,
-        W0106,
-        R1710,
-        R0903,
-        R1705,
-        R0123,
-        E0401
+        W0106, # Expression-not-assigned: As statement contains append function in single line for loop, it is not possible to assign to a variable
+        R1710, # Inconsistent-return-statements: Require to return from function if condition is satisfied.
+        E0401, # Import-error: Throws error even after successful import.
+        E0110, # Abstract-class-instantiated: states 'ExcelWriter' is a abstract class
+
+
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -367,7 +367,7 @@ ignore-docstrings=yes
 ignore-imports=no
 
 # Minimum lines number of a similarity.
-min-similarity-lines=4
+min-similarity-lines=6
 
 
 [SPELLING]
@@ -532,7 +532,7 @@ max-returns=6
 max-statements=50
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=1
+min-public-methods=0
 
 
 [IMPORTS]

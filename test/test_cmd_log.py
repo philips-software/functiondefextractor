@@ -1,5 +1,4 @@
-""" This file does the  test of the "Text similarity processor
-logging and commandline """
+"""Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
 
 import unittest
 import os
@@ -10,7 +9,7 @@ from extractor_cmd import create_parser
 
 
 def check_create_parser(option, value):
-    """ create a parser for commandline input and return handle"""
+    """ create a parser for command line input and return handle"""
     return create_parser([option, value])
 
 
@@ -25,22 +24,6 @@ class ParserAndLogTest(unittest.TestCase):
         parsed = check_create_parser("--p", "path_test")
         self.assertEqual(parsed.path, "path_test")
 
-    def test_src_code(self):
-        """ Function to test the parse source code variable in the command line
-                correct and incorrect """
-        with self.assertRaises(SystemExit):
-            check_create_parser("-c", "source_code")
-        parsed = check_create_parser("--c", "source_code")
-        self.assertEqual(parsed.code, "source_code")
-
-    def test_tst_code(self):
-        """ Function to test the parse test code variable in the command line
-                correct and incorrect """
-        with self.assertRaises(SystemExit):
-            check_create_parser("-t", "test_code")
-        parsed = check_create_parser("--t", "test_code")
-        self.assertEqual(parsed.test, "test_code")
-
     def test_annot_condition(self):
         """ Function to test the annotation condition variable in the command line """
         with self.assertRaises(SystemExit):
@@ -48,45 +31,51 @@ class ParserAndLogTest(unittest.TestCase):
         parsed = check_create_parser("--a", "annot_condition")
         self.assertEqual(parsed.annot, "annot_condition")
 
-    def test_delts(self):
+    def test_delta(self):
         """ Function to test the annotation condition variable in the command line """
         with self.assertRaises(SystemExit):
             check_create_parser("-d", "delta_value")
         parsed = check_create_parser("--d", "delta_value")
         self.assertEqual(parsed.delta, "delta_value")
 
+    def test_func_start_with(self):
+        """ Function to test the function start with condition in the command line """
+        with self.assertRaises(SystemExit):
+            check_create_parser("-f", "func_start_with")
+        parsed = check_create_parser("--p", "func_start_with")
+        self.assertEqual(parsed.path, "func_start_with")
+
     def test_from_command_help(self):
-        """Test function to test the commandline help option"""
+        """Test function to test the command line help option"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
                                               "extractor_cmd.py"))
         cmd = 'python %s --h' % script
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"), "w")
-        subprocess.Popen(cmd, stdout=tmpfile, shell=True).communicate()[0]
+        subprocess.call(cmd, stdout=tmpfile, shell=True)
         tmpfile.close()
         output.close()
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"),
                                             os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"))),
                          "Help option validated")
-        if os.path.exists(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt")):
-            os.remove(os.path.join(os.getcwd(), "test_resource", "tmp_help.txt"))
+        if os.path.exists(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt")):
+            os.remove(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"))
 
-    @unittest.skipIf("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", "Skipping this test on Travis CI.")
     def test_validate_inputs(self):
         """Test function to test the validate_inputs function"""
         script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
                                               "extractor_cmd.py"))
-        cmd = 'python %s --p %s' %(script, os.path.join(TestResource.tst_resource_folder, "wrong"))
+        cmd = 'python %s --p %s' % (script, os.path.join(TestResource.tst_resource_folder, "wrong"))
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"), "w")
-        subprocess.Popen(cmd, stdout=tmpfile, shell=True).communicate()[0]
+        subprocess.call(cmd, stdout=tmpfile, shell=True)
         tmpfile.close()
         output.close()
         self.assertEqual(True, (filecmp.cmp(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"),
                                             os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"))),
                          "validate_inputs function validated")
-        if os.path.exists(os.path.join(os.getcwd(), "test_resource", "tmp_validate.txt")):
-            os.remove(os.path.join(os.getcwd(), "test_resource", "tmp_validate.txt"))
+        if os.path.exists(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt")):
+            os.remove(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"))
 
 
 if __name__ == '__main__':

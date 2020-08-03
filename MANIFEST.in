@@ -1,2 +1,6 @@
 prune test*
 prune tests*
+include requirements.txt
+include LICENSE.md
+include MAINTAINERS.md
+include README.md

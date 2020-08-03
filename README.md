@@ -1,103 +1,130 @@
-[![Build Status](https://travis-ci.com/philips-software/functiondefextractor.svg?branch=master)](https://travis-ci.com/philips-software/functiondefextractor)
+# Function Extractor
+
+![Python application](https://github.com/philips-software/functiondefextractor/workflows/Python%20application/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/gh/philips-software/functiondefextractor/branch/master/graph/badge.svg)](https://codecov.io/gh/philips-software/functiondefextractor)
 
+Tool to extract the function definitions from the source code
 
-Function Definition Extractor
-=============================
+It can be used to extract functions from,
 
-What is the project intended to solve?
--------------------------------------
-Project will help to extract the function definitions from source or test code and report the extracted output
- in a data frame which can be further used for Similarity processing, Review, etc...
+- C  
 
-Dependencies
-------------
-`Python 3.7.3 `
+- C++
 
-[packages]
-**************
-```
-pip
+- C#  
 
-mutmut
+- Java  
 
-pytest
+- Python
 
-pandas
+- TypeScript
 
-codecov
+- JavaScript
 
-pytest-cov
+Advantage of using such function extractions are,
 
-pylint
-```
-[Third party tools]
-******************
-```
-Ctags
+- Resolving technical debt  
 
-grep
-```
-Installation
------------
+- Identify function similarity  
+
+- Identify pattern check (Supresswarnings, Assert, etc...)
+  
+## Dependencies
+
+- python 3.8 : 64 bit  
+
+- python packages (xlrd, xlsxwriter, pandas)  
+
+- third party packages [Ctags, grep]
+
+## Installation
+  
 [INSTALL.md](INSTALL.md)
 
-Usage & Configuration
---------------------
-1. Install the tool using `pip install functiondefextractor`
-2. To call from script
+```sh
+pip install functiondefextractor
 ```
+
+## Usage & Configuration
+
+### Code
+
+- General usage with out options.
+
+```sh
 from functiondefextractor import core_extractor
 out_put = core_extractor.extractor (r"path_to_repo/code")
 print(out_put)
 ```
 
-```
+- To extract functions based on annotation.
+
+```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code")
-# Default value of arguments are parse_code="True", parse_test="True", annot=None, delta=None
+out_put = core_extractor.extractor (r"path_to_repo/code", annot="@Test")
 print(out_put)
 ```
-3. To call from commandline
-```
-python -m functiondefextractor.extractor_cmd -h 
-```
-Note: 
 
-1.To use annotation based search feature, input annot and delta parameters (For example annot = "@Test", delta = "5") 
-  which returns a data frame containing + and - delta number of lines from the given annotation
+- To extract delta lines(+/-) from code based on annotation/key word.
+Note: If user is unaware of complete annotation use this(annot with delta)
+feature to extract functions else use the above feature.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor
+          (r"path_to_repo/code", annot="@SupressWarning", delta="5")
+print(out_put)
+```
+
+- To analyse various patterns in the code based on given condition.
+For example to search assert, suppress warnings patterns.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.check_condition
+          ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
+print(out_put)
+```
+
+### Commandline
+
+- General usage with out options to extract functions from repo.
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+```
+
+- To analyse various patterns in the code based on given condition.
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd
+             --c "@Assert" --e path/to/excel/dataframe --s "("
+```
+
+- Help option can be found at,  
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd -h
+```
+
+### Output
   
-2.While using this feature parse_code, parse_test conditions are set to default(True).
+- Executing functiondefextractor to extract functions from
+ command line would generate an output excel file which contains
+ FileName_FunctionName in Unique ID column and extracted functions in Code column
 
-3.An xlsx file is also generated as output in the same input location. 
-```
-from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code", parse_code="True", parse_test="True
-", annot="@Test", delta="5")
-print(out_put)
-```
+- Using functiondefextractor to extract functions from code would return
+ a dataframe with same content as excel file.
 
-How to test the software
------------------------
-1. To test the tool use : navigate to `functiondefextractor` which is the root directory
-2. Issue `pytest -v` to run all the tests
-To report the pytest in html: issue command `pytest --html=report.html`
+- When functiondefextractor is executed to analyse patterns in code, an excel file
+ with multiple sheets would be generated which contains the requested patterns and
+ pivot table. Also an html file with pivot table of the same would be generated.
 
-To run test for coverage: `pytest --cov-report html --cov="src"`
+## Contact
 
-pydoc creation `python -m pydoc -w module_name`
+[MAINTAINERS.md](MAINTAINERS.md)  
 
-mutation testing using mutmut `mutmut run`
+## License
 
-pylint execution on code `pylint src test >"path_to_save_file\pylint.txt"`
-
-jscpd execution on root folder `jscpd --min-tokens 20 --reporters "html" --mode "strict" --format "python" --output . .`
-
-Contact / Getting help
-----------------------
-[MAINTAINERS.md](MAINTAINERS.md)
-
-License
---------
-[License.md](License.md)
+[License.md](LICENSE.md)

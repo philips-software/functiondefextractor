@@ -1,0 +1,8 @@
+build/
+dist/
+functiondefextractor.egg-info/
+__pycache__
+functiondefextractor/extractor.log
+functiondefextractor\extractor.log
+.eggs/"version.txt" 
+.eggs/

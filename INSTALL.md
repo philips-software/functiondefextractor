@@ -2,65 +2,54 @@
 
 Requirements are added in requirement.txt file
 
-python & packages
-----------------
+Python 3.8
 
-`Python 3.7.3 - 64 bit`
+python: install python for the respective OS at
+"https://www.python.org/downloads/" Make sure to update the
+path variable to point to the python installation folder.
 
-python:
-install python for the respective OS at `https://www.python.org/downloads/` Make sure to update the path variable to point to the python installation folder.
+pip: (only if pip is not present by default) get get-pip.py
+from below link to your folder "https://bootstrap.pypa.io/get-pip.py"
+Open a command prompt and navigate to the folder containing get-pip.py.
 
-pip:
-get `get-pip.py` from below link to your folder `https://bootstrap.pypa.io/get-pip.py` Open a command prompt and navigate to the folder containing `get-pip.py`. Run the following command:
+Run the following command:
 
-pandas:
-`python -m pip install pandas`
+functiondefextractor:
 
-pylint:
-`python -m pip install -U pylint`
+pip install functiondefextractor
 
-mutmut:
-`python -m pip install mutmut`
+## Other tools
 
-pytest:
-`python -m pip install pytest`
+### Ctags: "https://en.wikipedia.org/wiki/Ctags"
 
-unittest:
-`python -m pip install unittest`
+- Windows:
 
-codecov:
-`python -m pip install codecov`
+1.Download Ctags from "http://ctags.sourceforge.net/"
 
-pytest-cov:
-`python -m pip install pytest-cov`
+2.Select the right package(based on OS & architecture) and
 
-Other tools
------------
-Ctags: `https://en.wikipedia.org/wiki/Ctags`
-***********************
+extract the zip file to a folder
 
-Windows:
-1. Download Ctags from `https://sourceforge.net/projects/ctags/files/ctags/5.8/ctags58.zip/download?use_mirror
-=excellmedia` 
+3.Update the system 'path' environment variable with the path to ctags executable
 
-   or 
-
-     `http://ctags.sourceforge.net/`
-2. select the right package(based on the Operating system and architecture) and extract the zip file to a folder
-3. Update the system 'path' environment variable with the path to ctags executable
-
-Linux: 
+- Linux:
 
 `apt-get install ctags`
 
-OS X: 
+- OS X:
 
 `brew install ctags`
-grep
-***********************
-1. Download grep `"binaries and Dependencies"` from `http://gnuwin32.sourceforge.net/packages/grep.htm` 
-2. extract the content to a folder
-3. Copy and paste contents from `\bin` folder of Dependencies to `\bin` folder of Binaries
-4. Update the system `'path'` environment variable with the path to "grep" executable
 
+### grep
 
+1.Download grep `"binaries and Dependencies"`
+
+from `http://gnuwin32.sourceforge.net/packages/grep.htm`
+
+2.Extract the content to a folder
+
+3.Copy and paste contents from `\bin` folder of Dependencies
+
+to `\bin` folder of Binaries
+
+4.Update the system `'path'` environment variable with the path to "grep" executable
