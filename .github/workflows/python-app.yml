@@ -23,6 +23,9 @@ jobs:
         with:
           python-version: 3.8
           node-version: ${{ env.NODE_VERSION }}
+      - name: set code cov tocken
+        env:
+          CODECOV_TOKEN: "7f5272e3-a1fb-49d4-bd22-8819fdd0f668"
       - name: Upgrade pip
         run: |
           python3 -m pip install --upgrade pip
