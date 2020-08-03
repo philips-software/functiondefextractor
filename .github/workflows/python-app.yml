@@ -12,7 +12,6 @@ on:
     branches: [ master ]
 env:
   NODE_VERSION: '10.13.0'                #  set this to the node version to use
-  CODECOV_TOKEN: "3f6e5e8b-dd7c-4f91-84af-9afc2bfa0b45"
 jobs:
   build:
     name: Conduct "Static analysis, Test & Coverage, Spell check, Mutation testing " for 🐍 code
@@ -30,6 +29,11 @@ jobs:
       - name: Install dependencies Conduct Static analysis Test Coverage Mutation
         run: |
           python3 build_scripts/dependencies_static_analysis_test_cov.py
+      - name: Upload coverage reports to Codecov
+        run: |
+          codecov
+        env: # Or as an environment variable
+          super_secret: ${{ secrets.CODECOV_TOKEN }}
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact_static_analysis
