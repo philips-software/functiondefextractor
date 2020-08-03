@@ -46,15 +46,6 @@ class SimpleTest(unittest.TestCase):
         self.assertEqual(expec_func_body, func_body_formated)
 
     @staticmethod
-    def get_formatted_data_frame(dataframe):
-        """Function to format the data frame"""
-        df_list = dataframe.values.tolist()
-        process_data = ','.join(df_list[0])
-        process_data_format = process_data.split()
-        formated_data_frame = ''.join(process_data_format)
-        return formated_data_frame
-
-    @staticmethod
     def __write_xlsx(data_f, name):
         """ Function which write the dataframe to xlsx """
         curr_path = (
