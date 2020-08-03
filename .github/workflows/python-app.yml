@@ -12,7 +12,7 @@ on:
     branches: [ master ]
 env:
   NODE_VERSION: '10.13.0'                #  set this to the node version to use
-  CODECOV_TOKEN: "7f5272e3-a1fb-49d4-bd22-8819fdd0f668"
+  CODECOV_TOKEN: "3f6e5e8b-dd7c-4f91-84af-9afc2bfa0b45"
 jobs:
   build:
     name: Conduct "Static analysis, Test & Coverage, Spell check, Mutation testing " for 🐍 code
