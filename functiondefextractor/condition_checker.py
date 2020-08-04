@@ -52,7 +52,7 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table["%s Statements" % test_assert] = data_table["%s Statements" % test_assert].str.wrap(200)
     if data_table.iat[0, 0] == '':  # pragma: no mutate
         data_table = data_table.drop([data_table.index[0]])
-    if not str(type(file_path)) == "<class 'pandas.core.frame.DataFrame'>":
+    if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":
         html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
         writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
                                 % test_assert.strip("@"), engine='xlsxwriter')
