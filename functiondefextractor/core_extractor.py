@@ -62,18 +62,16 @@ def get_function_names(file_names):
         else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"  # pragma: no mutate
     proc = run_ctags_cmd(file_ext, file_names, find)
     process = str(proc.stdout.read(), 'utf-8')
-    return process_function_names(process, find, file_names)
+    return process_function_names(process, find)
 
 
-def process_function_names(func_data, find, file_names):
+def process_function_names(func_data, find):
     """ This function cleans the ctags output to get function/method names and line numbers
         @parameters
         func_data: Ctags output
         find: keyword of method type(member/function/class/method)
         @return
         This function returns list of function names and line numbers"""
-    if func_data.strip() == "":  # pragma: no mutate
-        LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
     if func_data is not None:
         process_list = re.findall(r'\w+', func_data)
         val = [index for index, _ in enumerate(process_list) if
@@ -502,16 +500,6 @@ def clean_log():
         open(file_name, 'w').close()
 
 
-def get_log_data(line):
-    """ function to get the line requested from log data"""
-    ini_path = os.path.abspath(os.path.join
-                               (os.path.dirname(__file__), os.pardir))
-    file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
-    file_variable = open(file_name, encoding='utf-8', errors='ignore')  # pragma: no mutate
-    all_lines_variable = file_variable.readlines()
-    return all_lines_variable[-line]
-
-
 def remove_comments(dataframe):
     """ This function removes comments from the code extracted
             @parameters
@@ -538,11 +526,11 @@ def get_report(data, path):
     method_data = [[] for _ in range(len(FILE_TYPE))]
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
-        extension = os.path.splitext(data["Code"][i])
+        extension = os.path.splitext(data["Uniq ID"][i])
         res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
         if str(res) != "[]":  # pragma: no mutate
-            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
-            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.index[i])  # pylint: disable=E1310
+            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 1])  # pylint: disable=E1310
+            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
     return write_report_files(path, method_name, method_data)
 
 
@@ -633,10 +621,6 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
                 code_list = process_py_files(code_list, line_num, func_name, annot)
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
-        if "Warning:" in get_log_data(1):
-            print("Failed to extracted %s", func_name)  # pragma: no mutate
-        else:
-            LOG.info("Successfully extracted %s", func_name)  # pragma: no mutate
     end = time.time()
     LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
     LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
