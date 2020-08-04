@@ -21,18 +21,18 @@ def check_condition(condition, file_path_dataframe, splitter=None):
     test_assert = condition
     if ['Uniq ID'] not in data.columns.ravel():
         return "Couldn't find Uniq ID column"
-    data = pd.DataFrame(data, columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+    data = pd.DataFrame(data, columns=['Uniq ID', 'Code'])
     specifier_column = []
     spe_data = ""
     for i in range(len(data)):
-        for line in str(data.iat[i, 0]).splitlines():
+        for line in str(data.iat[i, 1]).splitlines():
             if test_assert.upper() in line.strip().upper():
                 spe_data = spe_data + line.strip() + os.linesep
         specifier_column.append(spe_data)
         spe_data = ""
     data['Count of %s in function' % test_assert] = data["Code"].str.upper().str.count(test_assert.upper())
     data["%s Statements" % test_assert] = specifier_column
-    get_pivot_table_result(data, test_assert, splitter, file_path_dataframe)
+    return get_pivot_table_result(data, test_assert, splitter, file_path_dataframe)
 
 
 def get_pivot_table_result(data, test_assert, splitter, file_path):
@@ -47,16 +47,20 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
         data["%s Statements" % test_assert] = data["%s Statements" % test_assert].apply(lambda x: x.split(splitter)[0])
     data_table = data.groupby("%s Statements" % test_assert).count().iloc[:, 1]
     data_table = data_table.to_frame()
-    data_table = data_table.rename({'Count of %s in function' % test_assert:
-                                        'Different %s pattern counts' % test_assert}, axis='columns')
+    data_table = data_table.rename({'Code': 'Different %s pattern counts' % test_assert}, axis='columns')
     data_table = data_table.reset_index()
     data_table["%s Statements" % test_assert] = data_table["%s Statements" % test_assert].str.wrap(200)
     if data_table.iat[0, 0] == '':  # pragma: no mutate
         data_table = data_table.drop([data_table.index[0]])
-    html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
-    writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
-                            % test_assert.strip("@"), engine='xlsxwriter')
-    data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
-    data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
-    data_table.to_html(html_file_path)
-    writer.save()
+    if not str(type(file_path)) == "<class 'pandas.core.frame.DataFrame'>":
+        html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
+        writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
+                                % test_assert.strip("@"), engine='xlsxwriter')
+        data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
+        data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
+        data_table.to_html(html_file_path)
+        writer.save()
+        ret_val = "Report files successfully generated at input path"
+    else:
+        ret_val = data, data_table
+    return ret_val

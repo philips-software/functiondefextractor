@@ -430,7 +430,7 @@ def process_delta_lines_data():
     UID_LIST.clear()
     mask = data_frame['Uniq ID'].duplicated(keep=False)
     data_frame.loc[mask, 'Uniq ID'] += data_frame.groupby('Uniq ID').cumcount().add(1).astype(str)
-    return data_frame.set_index("Uniq ID").sort_values('Uniq ID')
+    return data_frame.sort_values('Uniq ID')
 
 
 def process_final_data(code_list):
@@ -443,7 +443,7 @@ def process_final_data(code_list):
     data_frame = pd.DataFrame.from_dict(data, orient='index')
     data_frame = data_frame.transpose()
     UID_LIST.clear()
-    return data_frame.set_index("Uniq ID").sort_values('Uniq ID')
+    return data_frame
 
 
 def process_py_files(code_list, line_num, func_name, annot):
@@ -521,7 +521,7 @@ def remove_comments(dataframe):
     filtered_code = []
     data = ""
     for i in range(len(dataframe).__trunc__()):
-        for line in dataframe.iat[i, 0].splitlines():
+        for line in dataframe.iat[i, 1].splitlines():
             if not line.strip().startswith(("#", "//", "/*", "*", "*/")):  # pragma: no mutate
                 data = data + line.strip().split(";")[0] + os.linesep
         filtered_code.append(data)
@@ -538,7 +538,7 @@ def get_report(data, path):
     method_data = [[] for _ in range(len(FILE_TYPE))]
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
-        extension = os.path.splitext(data.index[i])
+        extension = os.path.splitext(data["Code"][i])
         res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
         if str(res) != "[]":  # pragma: no mutate
             method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
@@ -556,7 +556,7 @@ def write_report_files(path, method_name, method_data):
         returns a dataframe with all the extracted method names and definitions"""
     for i in range(len(FILE_TYPE).__trunc__()):
         dataframe = pd.DataFrame(list(zip(method_name[i], method_data[i])),
-                                 columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+                                 columns=['Uniq ID', 'Code'])
         if len(dataframe).__trunc__() != 0:
             writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(".")
                                                              + "_" + str(datetime.datetime.fromtimestamp(time.time()).
@@ -564,7 +564,7 @@ def write_report_files(path, method_name, method_data):
                                     engine='xlsxwriter')  # pragma: no mutate
             dataframe.to_excel(writer, sheet_name="funcDefExtractResult")
             writer.save()
-    return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+    return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code'])
 
 
 def validate_input_paths(path):

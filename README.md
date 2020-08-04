@@ -81,10 +81,10 @@ print(out_put)
 For example to search assert, suppress warnings patterns.
 
 ```sh
-from functiondefextractor import core_extractor
+from functiondefextractor import condition_checker
 out_put = core_extractor.check_condition
           ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
-print(out_put)
+print(out_put[0], out_put[1])
 ```
 
 ### Commandline
@@ -117,9 +117,10 @@ print(out_put)
 - Using functiondefextractor to extract functions from code would return
  a dataframe with same content as excel file.
 
-- When functiondefextractor is executed to analyse patterns in code, an excel file
- with multiple sheets would be generated which contains the requested patterns and
- pivot table. Also an html file with pivot table of the same would be generated.
+- When functiondefextractor is executed from script to analyse patterns in code,
+ a tuple with 2 data frames would be generated which contains the requested pattern
+ statements with their count in various functions and a pivot table of the
+ same respectively.
 
 ## Contact
 
