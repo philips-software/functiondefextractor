@@ -606,8 +606,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
     start = time.time()
-    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith),
-                  str):  # pylint: disable=R1705
+    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith), str):  # pylint: disable=R1705
         return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
