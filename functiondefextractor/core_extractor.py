@@ -57,7 +57,7 @@ def get_function_names(file_names):
         file_names: Path to the file
         @return
         This function returns function/method names and line numbers of all the given files"""
-    file_ext = str(os.path.basename(file_names).split('.')[1])
+    file_ext = os.path.splitext(file_names)[1].strip('.')
     find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
         else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"  # pragma: no mutate
     proc = run_ctags_cmd(file_ext, file_names, find)
@@ -560,7 +560,7 @@ def validate_input_paths(path):
     status_path = os.path.exists(path)
     if not status_path:
         print("Enter Valid Path", path)  # pragma: no mutate
-        LOG.info("Enter valid path %s", path)  # pragma: no mutate
+        LOG.info("Enter valid path %s" % path)  # pragma: no mutate
         sys.stdout.flush()
         script = None  # pragma: no mutate
         cmd = 'python %s --h' % script
@@ -606,13 +606,14 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
     start = time.time()
-    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith), str):  # pylint: disable=R1705
+    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith),
+                  str):  # pylint: disable=R1705
         return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     code_list = []
     for func_name in filter_files(get_file_names(path_loc)):
-        LOG.info("Extracting %s", func_name)  # pragma: no mutate
+        LOG.info("Extracting %s" % func_name)  # pragma: no mutate
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
         else:
@@ -622,6 +623,6 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
     end = time.time()
-    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
-    LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
+    LOG.info("Extraction process took %s minutes" % round((end - start) / 60, 3))  # pragma: no mutate
+    LOG.info("%s vaild files has been analysed" % len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))
