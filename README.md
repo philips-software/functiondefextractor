@@ -58,6 +58,24 @@ out_put = core_extractor.extractor (r"path_to_repo/code")
 print(out_put)
 ```
 
+- To exclude specific files from repository.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor (r"path_to_repo/code",
+                     regex_pattern=[r'*\test\*', '*.java'])
+print(out_put)
+```
+
+Sample regex patterns: (Note: replace # with *)
+
+1. '#.java' =>  to exclude all java files in a repository.
+
+2. '#/test/#' => to exclude test folder and files in it.
+
+3. '#/src/#/*.cpp' => to exclude all cpp files in src and
+    it's sub directories
+  
 - To extract functions based on annotation.
 
 ```sh

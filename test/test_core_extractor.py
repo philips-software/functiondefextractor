@@ -8,7 +8,7 @@ from unittest.mock import patch
 from test.test_resource import TestResource
 import pandas as pd
 from condition_checker import check_condition
-from core_extractor import get_file_names, get_report
+from core_extractor import get_file_names, get_report, filter_reg_files
 from core_extractor import get_function_names
 from core_extractor import get_func_body
 from core_extractor import extractor
@@ -39,6 +39,14 @@ class SimpleTest(unittest.TestCase):
                     os.path.join(self.src_files, "python_annot_file.py"),
                     os.path.join(self.src_files, "python_file.py")]
         self.assertEqual(expected.sort(), files.sort())
+
+    def test_filter_reg_files(self):
+        """Function to test filter_reg_files method"""
+        files = get_file_names(self.src_files)
+        filter_files = filter_reg_files(files, '*.py')
+        expected = [os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
+                    os.path.join(self.src_files, "test_repo.java"), os.path.join(self.src_files, "test_cpp_code.cpp")]
+        self.assertEqual(expected.sort(), filter_files.sort())
 
     def test_get_function_names(self):
         """Function to test get_function_names method"""

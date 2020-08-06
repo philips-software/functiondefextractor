@@ -19,3 +19,5 @@ dir
 inputed
 splitter
 fname
+allfiles
+

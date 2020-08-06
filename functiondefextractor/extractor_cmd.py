@@ -21,7 +21,7 @@ def create_parser(args):
     func_parser.add_argument('--path',
                              metavar='--p',
                              type=str,
-                             help='the Input folder path')
+                             help='The Input repository path')
 
     func_parser.add_argument('--annot',
                              metavar='--a',
@@ -39,13 +39,19 @@ def create_parser(args):
                              metavar='--f',
                              type=str,
                              default=None,
-                             help='functions starting with given key word')
+                             help='Functions starting with given key word')
 
     func_parser.add_argument('--reportpath',
                              metavar='--r',
                              type=str,
                              default=None,
                              help='Input report folder path')
+
+    func_parser.add_argument('--ignorefiles',
+                             metavar='--i',
+                             type=list,
+                             default=None,
+                             help='Regex pattern of files to be ignored')
 
     func_parser.add_argument('--excelfilepath',
                              metavar='--e',
@@ -57,13 +63,13 @@ def create_parser(args):
                              metavar='--c',
                              type=str,
                              default=None,
-                             help='condition to analyse against extracted methods')
+                             help='Condition to analyse against extracted methods')
 
     func_parser.add_argument('--splitter',
                              metavar='--s',
                              type=str,
                              default=None,
-                             help='key to split the extracted statements to generate a pivot table for easy analysis')
+                             help='Key to split the extracted statements to generate a pivot table for easy analysis')
 
     # ...Create your parser as you like...
     return func_parser.parse_args(args)
@@ -95,7 +101,7 @@ if __name__ == '__main__':
         validate_inputs(ARGS.path, "repository")
         ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
         validate_inputs(ARGS.reportpath, "report folder")  # pragma: no mutate
-        get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath)
+        get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath, ARGS.ignorefiles)
                    , ARGS.reportpath)
     else:
         validate_inputs(ARGS.excelfilepath, "Excel file")

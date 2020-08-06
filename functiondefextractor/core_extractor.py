@@ -1,6 +1,7 @@
 """Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
 
 import datetime
+import fnmatch
 import subprocess
 import os
 import re
@@ -31,6 +32,28 @@ def get_file_names(dir_path):
         else:
             allfiles.append(fullpath)
     return allfiles
+
+
+def filter_reg_files(allfiles, reg_pattern):
+    """ Function used to filter requested file patterns
+        from the files in the given directory
+        @parameters
+        allfiles: list of all files in the repository
+        @return
+        This function returns filtered files in the given directory"""
+    cmd = ""
+    regex, filtered_files = [], []
+    if reg_pattern is None:
+        filtered_files = allfiles
+    else:
+        for i in range(len(reg_pattern).__trunc__()):
+            cmd = "{} " + cmd
+            regex.append(fnmatch.translate(reg_pattern[i]))
+        cmd = "(" + cmd[:-1].replace(" ", "|") + ")"
+        re_obj = re.compile(cmd.format(*regex))
+        [filtered_files.append(allfiles[i]) if
+         re.match(re_obj, allfiles[i]) is None else None for i in range(len(allfiles))]
+    return filtered_files
 
 
 def run_ctags_cmd(file_ext, file_names, find):
@@ -592,7 +615,7 @@ def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
     return report_folder, annot
 
 
-def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None):
+def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None, regex_pattern=None):
     """ Function that initiates the overall process of extracting function/method definitions from the files
         @parameters
         path_loc: directory path of the repository
@@ -611,7 +634,7 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     code_list = []
-    for func_name in filter_files(get_file_names(path_loc)):
+    for func_name in filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern)):
         LOG.info("Extracting %s" % func_name)  # pragma: no mutate
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
@@ -623,5 +646,6 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
     end = time.time()
     LOG.info("Extraction process took %s minutes" % round((end - start) / 60, 3))  # pragma: no mutate
-    LOG.info("%s vaild files has been analysed" % len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
+    LOG.info("%s vaild files has been analysed"
+             % len(filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))
