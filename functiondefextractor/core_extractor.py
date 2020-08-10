@@ -14,7 +14,7 @@ import extractor_log as cl
 LOG = cl.get_logger()
 DELTA_BODY = []
 UID_LIST = []
-FILE_TYPE = [".java", ".cpp", ".c", ".cs", ".py", ".ts", ".js"]  # pragma: no mutate
+FILE_TYPE = ["JAVA", "CPP", "C", "CS", "PY", "TS", "JS"]  # pragma: no mutate
 
 
 def get_file_names(dir_path):
@@ -46,6 +46,7 @@ def filter_reg_files(allfiles, reg_pattern):
     if reg_pattern is None:
         filtered_files = allfiles
     else:
+        reg_pattern = reg_pattern.split(",")
         for i in range(len(reg_pattern).__trunc__()):
             cmd = "{} " + cmd
             regex.append(fnmatch.translate(reg_pattern[i]))
@@ -80,7 +81,7 @@ def get_function_names(file_names):
         file_names: Path to the file
         @return
         This function returns function/method names and line numbers of all the given files"""
-    file_ext = os.path.splitext(file_names)[1].strip('.')
+    file_ext = file_names.split('.')[-1].upper()
     find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
         else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"  # pragma: no mutate
     proc = run_ctags_cmd(file_ext, file_names, find)
@@ -228,7 +229,7 @@ def check_py_annot(file_name, annot):
         This function returns function/method names that has the given annotation"""
     line_data = list(
         [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
-    val = 0
+    val = 1
     if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
         annot = "def test_"
         val = -1
@@ -390,9 +391,9 @@ def filter_files(list_files):
     This function returns the list of required file(.java, .cpp, .c, .cs, .py) paths """
     local_files = []
     for files in list_files:
-        extension = os.path.splitext(files)
+        extension = files.split('.')[-1].upper()
         if len(extension).__trunc__() > 0:
-            if extension[1] in FILE_TYPE:
+            if extension in FILE_TYPE:
                 local_files.append(files)
     return local_files
 
@@ -549,8 +550,8 @@ def get_report(data, path):
     method_data = [[] for _ in range(len(FILE_TYPE))]
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
-        extension = os.path.splitext(data["Uniq ID"][i])
-        res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
+        extension = data["Uniq ID"][i].split('.')[-1].upper()
+        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].lower()])
         if str(res) != "[]":  # pragma: no mutate
             method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 1])  # pylint: disable=E1310
             method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310

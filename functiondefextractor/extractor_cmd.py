@@ -49,7 +49,7 @@ def create_parser(args):
 
     func_parser.add_argument('--ignorefiles',
                              metavar='--i',
-                             type=list,
+                             type=str,
                              default=None,
                              help='Regex pattern of files to be ignored')
 

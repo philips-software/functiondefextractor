@@ -43,9 +43,9 @@ class SimpleTest(unittest.TestCase):
     def test_filter_reg_files(self):
         """Function to test filter_reg_files method"""
         files = get_file_names(self.src_files)
-        filter_files = filter_reg_files(files, '*.py')
+        filter_files = filter_reg_files(files, r'*.py, *.cpp')
         expected = [os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
-                    os.path.join(self.src_files, "test_repo.java"), os.path.join(self.src_files, "test_cpp_code.cpp")]
+                    os.path.join(self.src_files, "test_repo.java")]
         self.assertEqual(expected.sort(), filter_files.sort())
 
     def test_get_function_names(self):
@@ -98,6 +98,7 @@ class SimpleTest(unittest.TestCase):
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "test_", None)
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
+        print(dataframe)
         dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
         df2_list["Code"] = df2_list["Code"].str.replace("\r\n", "")
         self.assertTrue(dataframe["Code"].equals(df2_list["Code"]))

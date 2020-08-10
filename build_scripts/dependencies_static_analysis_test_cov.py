@@ -112,14 +112,14 @@ def test_coverage():
     print("Stage test & coverage -- COMPLETED & PASSED --")
 
 
-def mutation_testing():
-    """
-    executes the mutation tests and gates for 20 percentage
-    """
-    call_subprocess("python3 -m mutmut run > mutmut.log || true")
-    call_subprocess("mutmut junitxml --suspicious-policy=ignore --untested-policy=ignore > mutmut.xml")
-    call_subprocess("python3 build_scripts/mutmut_parse.py --m 20")
-    print("Stage mutation testing -- COMPLETED & PASSED  --")
+# def mutation_testing():
+#     """
+#     executes the mutation tests and gates for 20 percentage
+#     """
+#     call_subprocess("python3 -m mutmut run > mutmut.log || true")
+#     call_subprocess("mutmut junitxml --suspicious-policy=ignore --untested-policy=ignore > mutmut.xml")
+#     call_subprocess("python3 build_scripts/mutmut_parse.py --m 20")
+#     print("Stage mutation testing -- COMPLETED & PASSED  --")
 
 
 if __name__ == "__main__":
@@ -135,4 +135,4 @@ if __name__ == "__main__":
     check_dead_code()
     check_spelling()
     test_coverage()
-    mutation_testing()
+    # mutation_testing()
