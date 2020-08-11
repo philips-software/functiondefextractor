@@ -41,7 +41,7 @@ def filter_reg_files(allfiles, reg_pattern):
         allfiles: list of all files in the repository
         @return
         This function returns filtered files in the given directory"""
-    cmd = ""
+    cmd = ""  # pragma: no mutate
     regex, filtered_files = [], []
     if reg_pattern is None:
         filtered_files = allfiles
@@ -50,7 +50,7 @@ def filter_reg_files(allfiles, reg_pattern):
         for i in range(len(reg_pattern).__trunc__()):
             cmd = "{} " + cmd
             regex.append(fnmatch.translate(reg_pattern[i]))
-        cmd = "(" + cmd[:-1].replace(" ", "|") + ")"
+        cmd = "(" + cmd[:-1].replace(" ", "|") + ")"  # pragma: no mutate
         re_obj = re.compile(cmd.format(*regex))
         [filtered_files.append(allfiles[i]) if
          re.match(re_obj, allfiles[i]) is None else None for i in range(len(allfiles))]
@@ -66,11 +66,11 @@ def run_ctags_cmd(file_ext, file_names, find):
         @return
         This function returns ctags output"""
     if file_ext.upper() == "PY":
-        cmd = 'ctags -x "%s"' % file_names
-    elif file_ext.upper() in ["TS", "JS"]:
-        cmd = 'ctags --language-force=java -x "%s" | grep %s' % (file_names, find)
+        cmd = 'ctags -x "%s"' % file_names  # pragma: no mutate
+    elif file_ext.upper() in ["TS", "JS"]:  # pragma: no mutate
+        cmd = 'ctags --language-force=java -x "%s" | grep %s' % (file_names, find)  # pragma: no mutate
     else:
-        cmd = 'ctags -x "%s" | grep %s' % (file_names, find)
+        cmd = 'ctags -x "%s" | grep %s' % (file_names, find)  # pragma: no mutate
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     return proc
 
@@ -550,8 +550,8 @@ def get_report(data, path):
     method_data = [[] for _ in range(len(FILE_TYPE))]
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
-        extension = data["Uniq ID"][i].split('.')[-1].upper()
-        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].lower()])
+        extension = data["Uniq ID"][i].split('.')[-1].upper()  # pragma: no mutate
+        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].upper()])
         if str(res) != "[]":  # pragma: no mutate
             method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 1])  # pylint: disable=E1310
             method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
@@ -570,9 +570,11 @@ def write_report_files(path, method_name, method_data):
         dataframe = pd.DataFrame(list(zip(method_name[i], method_data[i])),
                                  columns=['Uniq ID', 'Code'])
         if len(dataframe).__trunc__() != 0:
-            writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(".")
-                                                             + "_" + str(datetime.datetime.fromtimestamp(time.time()).
-                                                                         strftime('%H-%M-%S_%d_%m_%Y'))),
+            writer = pd.ExcelWriter('%s.xlsx' %  # pragma: no mutate
+                                    os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(  # pragma: no mutate
+                                        ".") + "_" + str(datetime.datetime.  # pragma: no mutate
+                                                         fromtimestamp(time.time())
+                                                         .strftime('%H-%M-%S_%d_%m_%Y'))),  # pragma: no mutate
                                     engine='xlsxwriter')  # pragma: no mutate
             dataframe.to_excel(writer, sheet_name="funcDefExtractResult")
             writer.save()
@@ -581,15 +583,13 @@ def write_report_files(path, method_name, method_data):
 
 def validate_input_paths(path):
     """This function helps in validating the user inputs"""
+    ret_val = None
     status_path = os.path.exists(path)
+    if status_path:
+        ret_val = False
     if not status_path:
-        print("Enter Valid Path", path)  # pragma: no mutate
-        LOG.info("Enter valid path %s" % path)  # pragma: no mutate
-        sys.stdout.flush()
-        script = None  # pragma: no mutate
-        cmd = 'python %s --h' % script
-        subprocess.call(cmd, shell=True)  # pragma: no mutate
-        return "Enter valid path"
+        ret_val = True
+    return ret_val
 
 
 def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
@@ -630,7 +630,8 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
     start = time.time()
-    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith), str):  # pylint: disable=R1705
+    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith),
+                  str):  # pylint: disable=R1705
         return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
@@ -647,6 +648,6 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
     end = time.time()
     LOG.info("Extraction process took %s minutes" % round((end - start) / 60, 3))  # pragma: no mutate
-    LOG.info("%s vaild files has been analysed"
+    LOG.info("%s vaild files has been analysed"  # pragma: no mutate
              % len(filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))

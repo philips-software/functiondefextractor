@@ -67,7 +67,7 @@ class SimpleTest(unittest.TestCase):
     def test_process_ad(self):
         """Function to test the complete end to end process of function definition extractor with
         Annotation and delta)"""
-        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "@Test", "5")
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), annot="@Test", delta="5")
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T_A_D.xlsx")).sort_values('Uniq ID')
         dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
@@ -86,7 +86,8 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_annot(self):
         """Function to test the complete end to end process of function definition extractor (True False annotation)"""
-        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "@Test", None)
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), annot="@Test",
+                              report_folder=None)
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_annot.xlsx"))
         dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
@@ -95,7 +96,8 @@ class SimpleTest(unittest.TestCase):
 
     def test_process_python_test_extract(self):
         """Function to test the complete end to end process of function definition extractor (True True)"""
-        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), "test_", None)
+        dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), functionstartwith="test_",
+                              report_folder=None)
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
         print(dataframe)
@@ -122,8 +124,11 @@ class SimpleTest(unittest.TestCase):
         dataframe = get_report(extractor((os.path.join(self.file_path, "test_resource", "test_repo")), None, None),
                                (os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")))
         df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "Extracted_methods.xlsx")).sort_values('Uniq ID')
-        self.assertEqual(len(df1_list["Code"]), len(dataframe["Code"]))
+                                              "codeextractor_T_T_A.xlsx")).sort_values('Uniq ID')
+        dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
+        df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
+        df1_list["Code"] = df1_list["Code"].str.replace("\r", "")
+        self.assertEqual(dataframe["Code"].values.tolist().sort(), df1_list["Code"].values.tolist().sort())
         my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")
         for fname in os.listdir(my_dir):
             if fname.startswith("ExtractedFunc_"):
@@ -153,21 +158,24 @@ class SimpleTest(unittest.TestCase):
 
     def test_pivot_table(self):
         """Function to test pivot table"""
-        check_condition("assert",
-                        os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_test.xlsx"), "(")
+        res = check_condition("assert",
+                              os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_test.xlsx"),
+                              "(")
         df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                                     "Test_Pivot_table_assert.html"))
         df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                                     "Pivot_table_assert.html"))
         self.assertEqual(df1_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist(),
                          df2_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist())
+        self.assertEqual(res, "Report files successfully generated at input path")
         self.assertEqual(str(df1_pivot_table[0].columns), str(df2_pivot_table[0].columns))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_assert.xlsx"))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_assert.html"))
 
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""
-        validate_inputs(os.getcwd(), "sample_path")
+        validate_inputs((os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                      "codeextractor_T_T.xlsx")), "Excel file")
         self.assertTrue("Input path validated" in get_log_data(1).strip())
         with patch('sys.exit') as exit_mock:
             validate_inputs("no/path", "sample_path")
@@ -178,8 +186,17 @@ class SimpleTest(unittest.TestCase):
         """Function to test command line working"""
         cmd = 'python -m functiondefextractor.extractor_cmd --p "%s"' \
               % (os.path.join(self.file_path, "test_resource", "test_repo", "test"))
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        self.assertEqual(str(proc.stdout.read(), 'utf-8'), "")
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "test_repo", "test")
+        for fname in os.listdir(my_dir):
+            if fname.startswith("ExtractedFunc_"):
+                df1_list = pd.read_excel(fname).sort_values('Uniq ID')
+                df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                      "Extracted_java.xlsx")).sort_values('Uniq ID')
+                df1_list["Code"] = df1_list["Code"].str.replace(os.linesep, "")
+                df2_list["Code"] = df2_list["Code"].str.replace(os.linesep, "")
+                df2_list["Code"] = df2_list["Code"].str.replace("\r", "")
+                self.assertEqual(df1_list["Code"].values.tolist().sort(), df2_list["Code"].values.tolist().sort())
 
 
 if __name__ == '__main__':
