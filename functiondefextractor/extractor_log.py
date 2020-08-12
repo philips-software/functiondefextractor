@@ -9,7 +9,7 @@ def get_logger():
     logging.basicConfig(filename=os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir,
                                                               "functiondefextractor",
                                                               "extractor.log")),
-                        format='%(asctime)s %(message)s', filemode='a')
+                        format='%(asctime)s %(message)s', filemode='a')  # pragma: no mutate
     # Creating log Object
     __logger = logging.getLogger()
     # Setting the threshold of logger to DEBUG

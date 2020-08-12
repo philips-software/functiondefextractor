@@ -75,3 +75,6 @@ xlrd
 xlsxwriter
 FileName
 Supresswarnings
+cpp
+regex
+functionstartwith

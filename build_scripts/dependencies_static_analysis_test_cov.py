@@ -90,7 +90,7 @@ def check_dead_code():
     """
     checks the repo for dead code with minimum confidence 100
     """
-    call_subprocess("python3 -m vulture --min-confidence 60 "
+    call_subprocess("python -m vulture --min-confidence 60 "
                     "functiondefextractor test build_scripts whitelist.py")
     print("Stage dead code detection -- COMPLETED & PASSED  --")
 

@@ -58,6 +58,24 @@ out_put = core_extractor.extractor (r"path_to_repo/code")
 print(out_put)
 ```
 
+- To exclude specific files from repository.
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor (r"path_to_repo/code",
+                     regex_pattern=r'*\test\*, *.java')
+print(out_put)
+```
+
+Sample regex patterns: (Note: replace # with *)
+
+1. '#.java' =>  to exclude all java files in a repository.
+
+2. '#/test/#' => to exclude test folder and files in it.
+
+3. '#/src/#/*.cpp' => to exclude all cpp files in src and
+    it's sub directories
+  
 - To extract functions based on annotation.
 
 ```sh
@@ -81,10 +99,10 @@ print(out_put)
 For example to search assert, suppress warnings patterns.
 
 ```sh
-from functiondefextractor import core_extractor
+from functiondefextractor import condition_checker
 out_put = core_extractor.check_condition
           ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
-print(out_put)
+print(out_put[0], out_put[1])
 ```
 
 ### Commandline
@@ -95,17 +113,76 @@ print(out_put)
 >>>python -m functiondefextractor.extractor_cmd --p path/to/repo
 ```
 
+- To ignore files from repo using regex pattern.
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+                                        --i '*.java, *.cpp'
+```
+
 - To analyse various patterns in the code based on given condition.
 
 ```sh
 >>>python -m functiondefextractor.extractor_cmd
-             --c "@Assert" --e path/to/excel/dataframe --s "("
+             --c "Assert" --e path/to/excel --s "("
 ```
 
 - Help option can be found at,  
 
 ```sh
 >>>python -m functiondefextractor.extractor_cmd -h
+```
+
+### Sample use cases
+
+- To extract all functions from a repository
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+```
+
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor (r"path_to_repo/code")
+print(out_put)
+```
+
+- To extract all functions with "@Test" annotation
+  excluding all ".cpp" files in the repository
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+                --a "@Test" --i '*.cpp'
+```
+  
+```sh
+from functiondefextractor import core_extractor
+out_put = core_extractor.extractor
+          (r"path_to_repo/code", annot="@Test", regex_pattern=r'*.cpp')
+print(out_put)
+```
+
+Note:
+
+1. functionstartwith argument can be used to specifically extract code
+from required functions whose names starts with "test_" or what ever name
+user is interested in.
+
+2. delta and annot arguments together can be used to extract required number
+of lines below and above the given annotation/keyword.
+
+- To analyze various patterns present in extracted code
+
+```sh
+>>>python -m functiondefextractor.extractor_cmd
+             --c "Assert" --e path/to/excel --s "("
+```
+
+```sh
+from functiondefextractor import condition_checker
+out_put = core_extractor.check_condition
+          ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
+print(out_put[0], out_put[1])
 ```
 
 ### Output
@@ -117,9 +194,10 @@ print(out_put)
 - Using functiondefextractor to extract functions from code would return
  a dataframe with same content as excel file.
 
-- When functiondefextractor is executed to analyse patterns in code, an excel file
- with multiple sheets would be generated which contains the requested patterns and
- pivot table. Also an html file with pivot table of the same would be generated.
+- When functiondefextractor is executed from script to analyse patterns in code,
+ a tuple with 2 data frames would be generated which contains the requested pattern
+ statements with their count in various functions and a pivot table of the
+ same respectively.
 
 ## Contact
 

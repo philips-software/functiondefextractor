@@ -1,6 +1,7 @@
 """Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
 
 import datetime
+import fnmatch
 import subprocess
 import os
 import re
@@ -13,7 +14,7 @@ import extractor_log as cl
 LOG = cl.get_logger()
 DELTA_BODY = []
 UID_LIST = []
-FILE_TYPE = [".java", ".cpp", ".c", ".cs", ".py", ".ts", ".js"]  # pragma: no mutate
+FILE_TYPE = ["JAVA", "CPP", "C", "CS", "PY", "TS", "JS"]  # pragma: no mutate
 
 
 def get_file_names(dir_path):
@@ -33,6 +34,29 @@ def get_file_names(dir_path):
     return allfiles
 
 
+def filter_reg_files(allfiles, reg_pattern):
+    """ Function used to filter requested file patterns
+        from the files in the given directory
+        @parameters
+        allfiles: list of all files in the repository
+        @return
+        This function returns filtered files in the given directory"""
+    cmd = ""  # pragma: no mutate
+    regex, filtered_files = [], []
+    if reg_pattern is None:
+        filtered_files = allfiles
+    else:
+        reg_pattern = reg_pattern.split(",")
+        for i in range(len(reg_pattern).__trunc__()):
+            cmd = "{} " + cmd
+            regex.append(fnmatch.translate(reg_pattern[i]))
+        cmd = "(" + cmd[:-1].replace(" ", "|") + ")"  # pragma: no mutate
+        re_obj = re.compile(cmd.format(*regex))
+        [filtered_files.append(allfiles[i]) if
+         re.match(re_obj, allfiles[i]) is None else None for i in range(len(allfiles))]
+    return filtered_files
+
+
 def run_ctags_cmd(file_ext, file_names, find):
     """ Function to execute ctags command
         @parameters
@@ -42,11 +66,11 @@ def run_ctags_cmd(file_ext, file_names, find):
         @return
         This function returns ctags output"""
     if file_ext.upper() == "PY":
-        cmd = 'ctags -x "%s"' % file_names
-    elif file_ext.upper() in ["TS", "JS"]:
-        cmd = 'ctags --language-force=java -x "%s" | grep %s' % (file_names, find)
+        cmd = 'ctags -x "%s"' % file_names  # pragma: no mutate
+    elif file_ext.upper() in ["TS", "JS"]:  # pragma: no mutate
+        cmd = 'ctags --language-force=java -x "%s" | grep %s' % (file_names, find)  # pragma: no mutate
     else:
-        cmd = 'ctags -x "%s" | grep %s' % (file_names, find)
+        cmd = 'ctags -x "%s" | grep %s' % (file_names, find)  # pragma: no mutate
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     return proc
 
@@ -57,23 +81,21 @@ def get_function_names(file_names):
         file_names: Path to the file
         @return
         This function returns function/method names and line numbers of all the given files"""
-    file_ext = str(os.path.basename(file_names).split('.')[1])
+    file_ext = file_names.split('.')[-1].upper()
     find = "function" if file_ext.upper() == "CPP" or file_ext.upper() == "C" \
         else ["member", "function", "class"] if file_ext.upper() == "PY" else "method"  # pragma: no mutate
     proc = run_ctags_cmd(file_ext, file_names, find)
     process = str(proc.stdout.read(), 'utf-8')
-    return process_function_names(process, find, file_names)
+    return process_function_names(process, find)
 
 
-def process_function_names(func_data, find, file_names):
+def process_function_names(func_data, find):
     """ This function cleans the ctags output to get function/method names and line numbers
         @parameters
         func_data: Ctags output
         find: keyword of method type(member/function/class/method)
         @return
         This function returns list of function names and line numbers"""
-    if func_data.strip() == "":  # pragma: no mutate
-        LOG.info("ctags: Warning: cannot open input file %s", file_names)  # pragma: no mutate
     if func_data is not None:
         process_list = re.findall(r'\w+', func_data)
         val = [index for index, _ in enumerate(process_list) if
@@ -207,7 +229,7 @@ def check_py_annot(file_name, annot):
         This function returns function/method names that has the given annotation"""
     line_data = list(
         [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
-    val = 0
+    val = 1
     if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
         annot = "def test_"
         val = -1
@@ -369,9 +391,9 @@ def filter_files(list_files):
     This function returns the list of required file(.java, .cpp, .c, .cs, .py) paths """
     local_files = []
     for files in list_files:
-        extension = os.path.splitext(files)
+        extension = files.split('.')[-1].upper()
         if len(extension).__trunc__() > 0:
-            if extension[1] in FILE_TYPE:
+            if extension in FILE_TYPE:
                 local_files.append(files)
     return local_files
 
@@ -430,7 +452,7 @@ def process_delta_lines_data():
     UID_LIST.clear()
     mask = data_frame['Uniq ID'].duplicated(keep=False)
     data_frame.loc[mask, 'Uniq ID'] += data_frame.groupby('Uniq ID').cumcount().add(1).astype(str)
-    return data_frame.set_index("Uniq ID").sort_values('Uniq ID')
+    return data_frame.sort_values('Uniq ID')
 
 
 def process_final_data(code_list):
@@ -443,7 +465,7 @@ def process_final_data(code_list):
     data_frame = pd.DataFrame.from_dict(data, orient='index')
     data_frame = data_frame.transpose()
     UID_LIST.clear()
-    return data_frame.set_index("Uniq ID").sort_values('Uniq ID')
+    return data_frame
 
 
 def process_py_files(code_list, line_num, func_name, annot):
@@ -502,16 +524,6 @@ def clean_log():
         open(file_name, 'w').close()
 
 
-def get_log_data(line):
-    """ function to get the line requested from log data"""
-    ini_path = os.path.abspath(os.path.join
-                               (os.path.dirname(__file__), os.pardir))
-    file_name = os.path.join(ini_path, "functiondefextractor", "extractor.log")
-    file_variable = open(file_name, encoding='utf-8', errors='ignore')  # pragma: no mutate
-    all_lines_variable = file_variable.readlines()
-    return all_lines_variable[-line]
-
-
 def remove_comments(dataframe):
     """ This function removes comments from the code extracted
             @parameters
@@ -521,7 +533,7 @@ def remove_comments(dataframe):
     filtered_code = []
     data = ""
     for i in range(len(dataframe).__trunc__()):
-        for line in dataframe.iat[i, 0].splitlines():
+        for line in dataframe.iat[i, 1].splitlines():
             if not line.strip().startswith(("#", "//", "/*", "*", "*/")):  # pragma: no mutate
                 data = data + line.strip().split(";")[0] + os.linesep
         filtered_code.append(data)
@@ -538,11 +550,11 @@ def get_report(data, path):
     method_data = [[] for _ in range(len(FILE_TYPE))]
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
-        extension = os.path.splitext(data.index[i])
-        res = str([ext for ext in FILE_TYPE if ext == str(extension[1]).split("_")[0].lower()])
+        extension = data["Uniq ID"][i].split('.')[-1].upper()  # pragma: no mutate
+        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].upper()])
         if str(res) != "[]":  # pragma: no mutate
-            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
-            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.index[i])  # pylint: disable=E1310
+            method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 1])  # pylint: disable=E1310
+            method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
     return write_report_files(path, method_name, method_data)
 
 
@@ -556,28 +568,28 @@ def write_report_files(path, method_name, method_data):
         returns a dataframe with all the extracted method names and definitions"""
     for i in range(len(FILE_TYPE).__trunc__()):
         dataframe = pd.DataFrame(list(zip(method_name[i], method_data[i])),
-                                 columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+                                 columns=['Uniq ID', 'Code'])
         if len(dataframe).__trunc__() != 0:
-            writer = pd.ExcelWriter('%s.xlsx' % os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(".")
-                                                             + "_" + str(datetime.datetime.fromtimestamp(time.time()).
-                                                                         strftime('%H-%M-%S_%d_%m_%Y'))),
+            writer = pd.ExcelWriter('%s.xlsx' %  # pragma: no mutate
+                                    os.path.join(path, "ExtractedFunc_" + str(FILE_TYPE[i]).strip(  # pragma: no mutate
+                                        ".") + "_" + str(datetime.datetime.  # pragma: no mutate
+                                                         fromtimestamp(time.time())
+                                                         .strftime('%H-%M-%S_%d_%m_%Y'))),  # pragma: no mutate
                                     engine='xlsxwriter')  # pragma: no mutate
             dataframe.to_excel(writer, sheet_name="funcDefExtractResult")
             writer.save()
-    return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code']).set_index("Uniq ID")
+    return pd.DataFrame(list(zip(method_name, method_data)), columns=['Uniq ID', 'Code'])
 
 
 def validate_input_paths(path):
     """This function helps in validating the user inputs"""
+    ret_val = None
     status_path = os.path.exists(path)
+    if status_path:
+        ret_val = False
     if not status_path:
-        print("Enter Valid Path", path)  # pragma: no mutate
-        LOG.info("Enter valid path %s", path)  # pragma: no mutate
-        sys.stdout.flush()
-        script = None  # pragma: no mutate
-        cmd = 'python %s --h' % script
-        subprocess.call(cmd, shell=True)  # pragma: no mutate
-        return "Enter valid path"
+        ret_val = True
+    return ret_val
 
 
 def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
@@ -604,7 +616,7 @@ def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
     return report_folder, annot
 
 
-def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None):
+def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None, regex_pattern=None):
     """ Function that initiates the overall process of extracting function/method definitions from the files
         @parameters
         path_loc: directory path of the repository
@@ -623,8 +635,8 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
     else:
         report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
     code_list = []
-    for func_name in filter_files(get_file_names(path_loc)):
-        LOG.info("Extracting %s", func_name)  # pragma: no mutate
+    for func_name in filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern)):
+        LOG.info("Extracting %s" % func_name)  # pragma: no mutate
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
         else:
@@ -633,11 +645,8 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
                 code_list = process_py_files(code_list, line_num, func_name, annot)
             else:
                 code_list = process_input_files(line_num, functions, annot, func_name, code_list)
-        if "Warning:" in get_log_data(1):
-            print("Failed to extracted %s", func_name)  # pragma: no mutate
-        else:
-            LOG.info("Successfully extracted %s", func_name)  # pragma: no mutate
     end = time.time()
-    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
-    LOG.info("%s vaild files has been analysed", len(filter_files(get_file_names(path_loc))))  # pragma: no mutate
+    LOG.info("Extraction process took %s minutes" % round((end - start) / 60, 3))  # pragma: no mutate
+    LOG.info("%s vaild files has been analysed"  # pragma: no mutate
+             % len(filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))
