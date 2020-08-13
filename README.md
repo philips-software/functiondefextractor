@@ -62,20 +62,26 @@ print(out_put)
 
 ```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code",
-                     regex_pattern=r'*\test\*, *.java')
+out_put = core_extractor.extractor (r"path_to_repo/code", regex_pattern=r'*\test\*,*.java')
 print(out_put)
 ```
 
-Sample regex patterns: (Note: replace # with *)
+Sample regex patterns:
+Note: Space given after comma(,) in regex pattern is also treated as part of
+the pattern. For example
 
-1. '#.java' =>  to exclude all java files in a repository.
+```sh
+(*.java, *.cpp) != (*.java,*.cpp)
+```
 
-2. '#/test/#' => to exclude test folder and files in it.
+```sh
+1. '*.java' =>  to exclude all java files in a repository.
 
-3. '#/src/#/*.cpp' => to exclude all cpp files in src and
-    it's sub directories
-  
+2. '*/test/*' => to exclude test folder and files in it.
+
+3. '*/src/*/*.cpp' => to exclude all cpp files in src and it's sub directories
+```
+
 - To extract functions based on annotation.
 
 ```sh
@@ -86,12 +92,12 @@ print(out_put)
 
 - To extract delta lines(+/-) from code based on annotation/key word.
 Note: If user is unaware of complete annotation use this(annot with delta)
-feature to extract functions else use the above feature.
+feature to extract functions else use the above feature. Suggested to use
+delta=0 to get only line with annotation.
 
 ```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor
-          (r"path_to_repo/code", annot="@SupressWarning", delta="5")
+out_put = core_extractor.extractor(r"path_to_repo/code", annot="@SupressWarning", delta="5")
 print(out_put)
 ```
 
@@ -100,8 +106,7 @@ For example to search assert, suppress warnings patterns.
 
 ```sh
 from functiondefextractor import condition_checker
-out_put = core_extractor.check_condition
-          ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
+out_put = core_extractor.check_condition("@SupressWarning", r"path_to_excelfile/dataframe", "(")
 print(out_put[0], out_put[1])
 ```
 
@@ -116,15 +121,13 @@ print(out_put[0], out_put[1])
 - To ignore files from repo using regex pattern.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo
-                                        --i '*.java, *.cpp'
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo --i '*.java, *.cpp'
 ```
 
 - To analyse various patterns in the code based on given condition.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd
-             --c "Assert" --e path/to/excel --s "("
+>>>python -m functiondefextractor.extractor_cmd --c "Assert" --e path/to/excel --s "("
 ```
 
 - Help option can be found at,  
@@ -151,14 +154,12 @@ print(out_put)
   excluding all ".cpp" files in the repository
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo
-                --a "@Test" --i '*.cpp'
+>>>python -m functiondefextractor.extractor_cmd --p path/to/repo --a "@Test" --i '*.cpp'
 ```
   
 ```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor
-          (r"path_to_repo/code", annot="@Test", regex_pattern=r'*.cpp')
+out_put = core_extractor.extractor(r"path_to_repo/code", annot="@Test", regex_pattern=r'*.cpp')
 print(out_put)
 ```
 
@@ -174,14 +175,12 @@ of lines below and above the given annotation/keyword.
 - To analyze various patterns present in extracted code
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd
-             --c "Assert" --e path/to/excel --s "("
+>>>python -m functiondefextractor.extractor_cmd --c "Assert" --e path/to/excel --s "("
 ```
 
 ```sh
 from functiondefextractor import condition_checker
-out_put = core_extractor.check_condition
-          ("@SupressWarning", r"path_to_excelfile/dataframe", "(")
+out_put = core_extractor.check_condition("@SupressWarning", r"path_to_excelfile/dataframe", "(")
 print(out_put[0], out_put[1])
 ```
 

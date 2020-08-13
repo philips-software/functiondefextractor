@@ -31,22 +31,14 @@ class SimpleTest(unittest.TestCase):
     src_files = os.path.join(TestResource.tst_resource_folder, "test_repo", "src")
     file_path = (os.path.join(os.path.dirname(__file__), os.pardir)).split("test")[0]
 
-    def test_get_file_names(self):
-        """Function to test get_file_names method"""
-        files = get_file_names(self.src_files)
-        expected = [os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
-                    os.path.join(self.src_files, "test_repo.java"), os.path.join(self.src_files, "test_cpp_code.cpp"),
-                    os.path.join(self.src_files, "python_annot_file.py"),
-                    os.path.join(self.src_files, "python_file.py")]
-        self.assertEqual(expected.sort(), files.sort())
-
     def test_filter_reg_files(self):
         """Function to test filter_reg_files method"""
         files = get_file_names(self.src_files)
-        filter_files = filter_reg_files(files, r'*.py, *.cpp')
-        expected = [os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
+        filter_files = filter_reg_files(files, r'*.py,*.cpp,*.js,*.ts')
+        expected = [os.path.join(self.src_files, "CerberusTest.java"),
+                    os.path.join(self.src_files, "HelloController.java"), os.path.join(self.src_files, "test_c.c"),
                     os.path.join(self.src_files, "test_repo.java")]
-        self.assertEqual(expected.sort(), filter_files.sort())
+        self.assertEqual(set(expected), set(filter_files))
 
     def test_get_function_names(self):
         """Function to test get_function_names method"""
@@ -100,7 +92,6 @@ class SimpleTest(unittest.TestCase):
                               report_folder=None)
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
-        print(dataframe)
         dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
         df2_list["Code"] = df2_list["Code"].str.replace("\r\n", "")
         self.assertTrue(dataframe["Code"].equals(df2_list["Code"]))
