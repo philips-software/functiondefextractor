@@ -62,7 +62,7 @@ print(out_put)
 
 ```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor (r"path_to_repo/code", regex_pattern=r'*\test\*,*.java')
+out_put = core_extractor.extractor (r"path_to_repo/code", exclude=r'*\test\*,*.java')
 print(out_put)
 ```
 
@@ -159,7 +159,7 @@ print(out_put)
   
 ```sh
 from functiondefextractor import core_extractor
-out_put = core_extractor.extractor(r"path_to_repo/code", annot="@Test", regex_pattern=r'*.cpp')
+out_put = core_extractor.extractor(r"path_to_repo/code", annot="@Test", exclude=r'*.cpp')
 print(out_put)
 ```
 
