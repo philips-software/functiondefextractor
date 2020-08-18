@@ -82,7 +82,7 @@ def validate_inputs(arg_path, repo):
     if status_path:
         LOG.info("Input path validated")  # pragma: no mutate
     if not status_path:
-        LOG.info("Enter valid %s path" % repo)  # pragma: no mutate
+        LOG.info("Enter valid %s path", repo)  # pragma: no mutate
         print("Enter valid %s path" % repo)  # pragma: no mutate
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))

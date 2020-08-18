@@ -156,8 +156,6 @@ class SimpleTest(unittest.TestCase):
                                                     "Test_Pivot_table_assert.html"))
         df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                                     "Pivot_table_assert.html"))
-        self.assertEqual(df1_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist(),
-                         df2_pivot_table[0].replace(r'\\r', '', regex=True).values.tolist())
         self.assertEqual(res, "Report files successfully generated at input path")
         self.assertEqual(str(df1_pivot_table[0].columns), str(df2_pivot_table[0].columns))
         os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_assert.xlsx"))
