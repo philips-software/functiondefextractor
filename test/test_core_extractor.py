@@ -92,8 +92,8 @@ class SimpleTest(unittest.TestCase):
                               report_folder=None)
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
-        dataframe["Code"] = dataframe["Code"].str.replace(os.linesep, "")
-        df2_list["Code"] = df2_list["Code"].str.replace("\r\n", "")
+        dataframe["Code"] = dataframe["Code"].str.replace("\r\n", "")
+        df2_list["Code"] = df2_list["Code"].str.replace(os.linesep, "")
         self.assertTrue(dataframe["Code"].equals(df2_list["Code"]))
 
     def test_invalid_path(self):
