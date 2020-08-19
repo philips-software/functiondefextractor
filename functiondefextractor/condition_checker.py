@@ -68,8 +68,8 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table = data_table.reset_index()
     data_table = data_table.rename({'index': 'Different %s patterns ' % test_assert}, axis='columns')
     if data_table.iat[0, 0] == '':  # pragma: no mutate
-        data_table = data_table.drop([data_table.index[0]])
-    if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":
+        data_table = data_table.drop([data_table.index[0]])  # pragma: no mutate
+    if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":  # pragma: no mutate
         writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
                                 % test_assert.strip("@"), engine='xlsxwriter')
         data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
@@ -77,7 +77,7 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
         data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
         data_table.to_html(html_file_path)
         writer.save()
-        ret_val = "Report files successfully generated at input path"
+        ret_val = "Report files successfully generated at input path"  # pragma: no mutate
     else:
         ret_val = data, data_table
     return ret_val
