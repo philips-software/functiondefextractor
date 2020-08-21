@@ -3,6 +3,7 @@
 import os
 
 import pandas as pd
+from pandas import DataFrame
 
 
 def check_condition(condition, file_path_dataframe, splitter=None):
@@ -35,6 +36,23 @@ def check_condition(condition, file_path_dataframe, splitter=None):
     return get_pivot_table_result(data, test_assert, splitter, file_path_dataframe)
 
 
+def clean_data(splitter, data):
+    """ This function is used to filter the data based on the splitter
+        @parameters
+        data: generated pattern dataframe
+        splitter: key to split statement in pivot table"""
+    specifier_column = []
+    if splitter is not None:
+        for i in range(len(data)):
+            for line in str(data.iat[i, 3]).splitlines():
+                specifier_column.append(line.split(splitter)[0])
+    else:
+        for i in range(len(data)):
+            for line in str(data.iat[i, 3]).splitlines():
+                specifier_column.append(line)
+    return specifier_column
+
+
 def get_pivot_table_result(data, test_assert, splitter, file_path):
     """ This function creates a pivot table for easy analysis
         and also number of occurrences in the specific function code
@@ -43,24 +61,23 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
         test_assert: pattern key word (Ex: @staticmethod, @Test, etc.)
         splitter: key to split statement in pivot table
         file_path: Input xlsx file used for searching pattern"""
-    if splitter is not None:
-        data["%s Statements" % test_assert] = data["%s Statements" % test_assert].apply(lambda x: x.split(splitter)[0])
-    data_table = data.groupby("%s Statements" % test_assert).count().iloc[:, 1]
+    specifier_column = clean_data(splitter, data)
+    data_frame = DataFrame(specifier_column, columns=['Count'])
+    data_table = data_frame.Count.value_counts()
     data_table = data_table.to_frame()
-    data_table = data_table.rename({'Code': 'Different %s pattern counts' % test_assert}, axis='columns')
     data_table = data_table.reset_index()
-    data_table["%s Statements" % test_assert] = data_table["%s Statements" % test_assert].str.wrap(200)
+    data_table = data_table.rename({'index': 'Different %s patterns ' % test_assert}, axis='columns')
     if data_table.iat[0, 0] == '':  # pragma: no mutate
-        data_table = data_table.drop([data_table.index[0]])
-    if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":
-        html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
+        data_table = data_table.drop([data_table.index[0]])  # pragma: no mutate
+    if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":  # pragma: no mutate
         writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
                                 % test_assert.strip("@"), engine='xlsxwriter')
         data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
+        html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
         data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
         data_table.to_html(html_file_path)
         writer.save()
-        ret_val = "Report files successfully generated at input path"
+        ret_val = "Report files successfully generated at input path"  # pragma: no mutate
     else:
         ret_val = data, data_table
     return ret_val

@@ -215,8 +215,8 @@ def process_annot_method_body(annot, data, filename, line_num):
     if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start) \
             .strip(annot_end).upper().split(",") and data.strip().startswith(annot_start):
         ret_val = data + os.linesep + get_func_body(filename, line_num)
-    elif data[:1] != "@" and str(data).strip() == "}" or str(data).strip() == "{":
-        ret_val = None
+    elif data[:1] != "@" and str(data).strip() == "}" or str(data).strip() == "{":  # pragma: no mutate
+        ret_val = None  # pragma: no mutate
     return ret_val
 
 
@@ -229,10 +229,10 @@ def check_py_annot(file_name, annot):
         This function returns function/method names that has the given annotation"""
     line_data = list(
         [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
-    val = 1
+    val = 1  # pragma: no mutate
     if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
-        annot = "def test_"
-        val = -1
+        annot = "def test_"  # pragma: no mutate
+        val = -1  # pragma: no mutate
     return get_py_annot_method_names(line_data, annot, val)
 
 
@@ -320,7 +320,7 @@ def process_py_methods(file_name, line_numbers, line_data):
     data_func_name = []
     for i, _ in enumerate(line_numbers):
         start = line_numbers[i]
-        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
+        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1  # pragma: no mutate
         data.append(os.linesep.join(line_data[start - 1:stop]))
         data_func_name.append(str(file_name) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:
@@ -358,7 +358,7 @@ def process_py_func_body(data_body, data_name):
         @return
         This function returns python function/method definitions in a organized format"""
     for i, _ in enumerate(data_body):
-        data_body[i] = os.linesep.join([s for s in str(data_body[i]).splitlines() if s])
+        data_body[i] = os.linesep.join([s for s in str(data_body[i]).splitlines() if s])  # pragma: no mutate
     data_body = clean_py_methods(data_body)
     return data_name, data_body
 
@@ -374,9 +374,10 @@ def clean_py_methods(data_body):
     for j, _ in enumerate(data_body):
         data_list = list(str(data_body[j]).split(os.linesep))
         count = len(data_list[0]) - len(data_list[0].lstrip())
-        i = 0
+        i = 0  # pragma: no mutate
         for i, _ in enumerate(data_list):
-            if i == len(data_list) - 1 or len(data_list[i + 1]) - len(data_list[i + 1].lstrip()) <= count:
+            if i == len(data_list) - 1 or len(data_list[i + 1]) \
+                    - len(data_list[i + 1].lstrip()) <= count:  # pragma: no mutate
                 break
         del data_list[i + 1:]
         data_body[j] = str(os.linesep.join(data_list))
@@ -420,7 +421,7 @@ def process_delta_lines_body(annot, line, delta, num, line_data, data, file_name
         data: variable that holds delta lines data"""
     if annot.upper() in line.strip().upper():
         for i in range(0, (int(delta) * 2) + 1):
-            if num - (int(delta) + 1) + i >= len(line_data):
+            if num - (int(delta) + 1) + i >= len(line_data):  # pragma: no mutate
                 break
             data.append(line_data[num - (int(delta) + 1) + i])
         DELTA_BODY.append("\n".join(data))
@@ -468,7 +469,7 @@ def process_final_data(code_list):
     return data_frame
 
 
-def process_py_files(code_list, line_num, func_name, annot):
+def process_py_files(code_list, line_num, func_name, annot, functionstartwith):
     """ This function processes that input python files to extract methods from the given repo
         @parameters
         code_list: list to store the extracted methods
@@ -477,6 +478,8 @@ def process_py_files(code_list, line_num, func_name, annot):
         annot: given annotation condition (Ex: @staticmethod)
         @return
         This function returns extracted python methods"""
+    if functionstartwith is not None:
+        annot = functionstartwith
     if len(line_num).__trunc__() != 0:
         def_name, def_body = get_py_func_body(line_num, func_name, annot)
         if len(def_body).__trunc__() != 0:
@@ -485,7 +488,7 @@ def process_py_files(code_list, line_num, func_name, annot):
     return code_list
 
 
-def process_input_files(line_num, functions, annot, func_name, code_list):
+def process_input_files(line_num, functions, annot, func_name, code_list, functionstartwith):
     """ This function processes that input files to extract methods from the given repo
         @parameters
         code_list: list to store the extracted methods
@@ -494,6 +497,14 @@ def process_input_files(line_num, functions, annot, func_name, code_list):
         annot: given annotation condition (Ex: @staticmethod)
         @return
         This function returns extracted python methods"""
+    if functionstartwith is not None:
+        filter_func, filer_line_no = [], []
+        for i in range(len(line_num).__trunc__()):
+            if str(functions[i]).upper().startswith(functionstartwith.upper()):
+                filter_func.append(functions[i])
+                filer_line_no.append(line_num[i])
+        functions = filter_func
+        line_num = filer_line_no
     for lin_no, func in zip(line_num, functions):
         if check_annot(func_name, lin_no, annot) is not None:
             code_list.append(check_annot(func_name, lin_no, annot))
@@ -551,7 +562,7 @@ def get_report(data, path):
     method_name = [[] for _ in range(len(FILE_TYPE))]
     for i in range(len(data).__trunc__()):
         extension = data["Uniq ID"][i].split('.')[-1].upper()  # pragma: no mutate
-        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].upper()])
+        res = str([ext for ext in FILE_TYPE if ext == str(extension).split("_")[0].upper()])  # pragma: no mutate
         if str(res) != "[]":  # pragma: no mutate
             method_data[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 1])  # pylint: disable=E1310
             method_name[int(FILE_TYPE.index(res.strip("[]''")))].append(data.iat[i, 0])  # pylint: disable=E1310
@@ -592,7 +603,7 @@ def validate_input_paths(path):
     return ret_val
 
 
-def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
+def initialize_values(delta, annot, path_loc, report_folder):
     """ Function that initializes the input variables
             @parameters
             path_loc: directory path of the repository
@@ -611,12 +622,10 @@ def initialize_values(delta, annot, path_loc, report_folder, functionstartwith):
     if validate_input_paths(report_folder):
         return "Enter valid report path"
     LOG.info("Input report folder path validated successfully")  # pragma: no mutate
-    if functionstartwith is not None:
-        annot = functionstartwith
     return report_folder, annot
 
 
-def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None, regex_pattern=None):
+def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_folder=None, exclude=None):
     """ Function that initiates the overall process of extracting function/method definitions from the files
         @parameters
         path_loc: directory path of the repository
@@ -630,23 +639,23 @@ def extractor(path_loc, annot=None, delta=None, functionstartwith=None, report_f
         the above function call initiates the process to run function definition extraction on
         all files with @test annotation of the repository given """
     start = time.time()
-    if isinstance(initialize_values(delta, annot, path_loc, report_folder, functionstartwith), str):  # pylint: disable=R1705
-        return initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
+    if isinstance(initialize_values(delta, annot, path_loc, report_folder), str):  # pylint: disable=R1705
+        return initialize_values(delta, annot, path_loc, report_folder)
     else:
-        report_folder, annot = initialize_values(delta, annot, path_loc, report_folder, functionstartwith)
+        report_folder, annot = initialize_values(delta, annot, path_loc, report_folder)
     code_list = []
-    for func_name in filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern)):
-        LOG.info("Extracting %s" % func_name)  # pragma: no mutate
+    for func_name in filter_files(filter_reg_files(get_file_names(path_loc), exclude)):
+        LOG.info("Extracting %s", func_name)  # pragma: no mutate
         if delta is not None:
             get_delta_lines(func_name, annot, delta)
         else:
             functions, line_num = get_function_names(func_name)
             if os.path.splitext(func_name)[1].upper() == ".PY":
-                code_list = process_py_files(code_list, line_num, func_name, annot)
+                code_list = process_py_files(code_list, line_num, func_name, annot, functionstartwith)
             else:
-                code_list = process_input_files(line_num, functions, annot, func_name, code_list)
+                code_list = process_input_files(line_num, functions, annot, func_name, code_list, functionstartwith)
     end = time.time()
-    LOG.info("Extraction process took %s minutes" % round((end - start) / 60, 3))  # pragma: no mutate
-    LOG.info("%s vaild files has been analysed"  # pragma: no mutate
-             % len(filter_files(filter_reg_files(get_file_names(path_loc), regex_pattern))))  # pragma: no mutate
+    LOG.info("Extraction process took %s minutes", round((end - start) / 60, 3))  # pragma: no mutate
+    LOG.info("%s vaild files has been analysed",  # pragma: no mutate
+             len(filter_files(filter_reg_files(get_file_names(path_loc), exclude))))  # pragma: no mutate
     return remove_comments(get_final_dataframe(delta, code_list))

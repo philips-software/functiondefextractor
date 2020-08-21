@@ -5,9 +5,7 @@ import os
 import subprocess
 import sys
 
-from condition_checker import check_condition
-from core_extractor import extractor
-from core_extractor import get_report
+
 from core_extractor import LOG
 
 
@@ -78,31 +76,14 @@ def create_parser(args):
 def validate_inputs(arg_path, repo):
     """This function helps in validating the user inputs"""
     status_path = True if os.path.splitext(arg_path)[1].upper() == ".XLSX" and os.path.exists(arg_path) \
-        else False if repo == "Excel file" else os.path.exists(arg_path)
+        else False if repo == "Excel file" else os.path.exists(arg_path)  # pragma: no mutate
     if status_path:
         LOG.info("Input path validated")  # pragma: no mutate
     if not status_path:
-        LOG.info("Enter valid %s path" % repo)  # pragma: no mutate
+        LOG.info("Enter valid %s path", repo)  # pragma: no mutate
         print("Enter valid %s path" % repo)  # pragma: no mutate
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))
         cmd = 'python %s --h' % script
         subprocess.call(cmd, shell=True)  # pragma: no mutate
         sys.exit(1)  # pragma: no mutate
-
-
-if __name__ == '__main__':
-    # Execute the parse_args() method
-    ARGS = create_parser(sys.argv[1:])
-    if ARGS.delta is not None and ARGS.annot is None:
-        print("delta(--d) should be in combination with annotation(--a)")  # pragma: no mutate
-        raise SystemExit
-    if ARGS.conditionchecker is None:
-        validate_inputs(ARGS.path, "repository")
-        ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
-        validate_inputs(ARGS.reportpath, "report folder")  # pragma: no mutate
-        get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath, ARGS.ignorefiles)
-                   , ARGS.reportpath)
-    else:
-        validate_inputs(ARGS.excelfilepath, "Excel file")
-        check_condition(ARGS.conditionchecker, ARGS.excelfilepath, ARGS.splitter)

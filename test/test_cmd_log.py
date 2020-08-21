@@ -47,8 +47,7 @@ class ParserAndLogTest(unittest.TestCase):
 
     def test_from_command_help(self):
         """Test function to test the command line help option"""
-        script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
-                                              "extractor_cmd.py"))
+        script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor"))
         cmd = 'python %s --h' % script
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_help.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_help.txt"), "w")
@@ -63,8 +62,7 @@ class ParserAndLogTest(unittest.TestCase):
 
     def test_validate_inputs(self):
         """Test function to test the validate_inputs function"""
-        script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",
-                                              "extractor_cmd.py"))
+        script = os.path.abspath(os.path.join(TestResource.par_dir, "functiondefextractor",))
         cmd = 'python %s --p %s' % (script, os.path.join(TestResource.tst_resource_folder, "wrong"))
         output = open(os.path.join(TestResource.tst_resource_folder, "cmd_validate.txt"), "r")
         tmpfile = open(os.path.join(TestResource.tst_resource_folder, "tmp_validate.txt"), "w")

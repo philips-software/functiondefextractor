@@ -115,25 +115,25 @@ print(out_put[0], out_put[1])
 - General usage with out options to extract functions from repo.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+>>>python -m functiondefextractor --p "path/to/repo"
 ```
 
 - To ignore files from repo using regex pattern.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo --i '*.java, *.cpp'
+>>>python -m functiondefextractor --p "path/to/repo" --i '*.java, *.cpp'
 ```
 
 - To analyse various patterns in the code based on given condition.
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --c "Assert" --e path/to/excel --s "("
+>>>python -m functiondefextractor --c "Assert" --e "path/to/excel" --s "("
 ```
 
 - Help option can be found at,  
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd -h
+>>>python -m functiondefextractor --h
 ```
 
 ### Sample use cases
@@ -141,7 +141,7 @@ print(out_put[0], out_put[1])
 - To extract all functions from a repository
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo
+>>>python -m functiondefextractor --p "path/to/repo"
 ```
 
 ```sh
@@ -154,7 +154,7 @@ print(out_put)
   excluding all ".cpp" files in the repository
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --p path/to/repo --a "@Test" --i '*.cpp'
+>>>python -m functiondefextractor --p "path/to/repo" --a "@Test" --i '*.cpp'
 ```
   
 ```sh
@@ -175,7 +175,7 @@ of lines below and above the given annotation/keyword.
 - To analyze various patterns present in extracted code
 
 ```sh
->>>python -m functiondefextractor.extractor_cmd --c "Assert" --e path/to/excel --s "("
+>>>python -m functiondefextractor --c "Assert" --e "path/to/excel" --s "("
 ```
 
 ```sh

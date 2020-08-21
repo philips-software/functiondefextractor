@@ -1,7 +1,7 @@
-usage: extractor_cmd.py [-h] [--path --p] [--annot --a] [--delta --d]
-                        [--funcstartwith --f] [--reportpath --r]
-                        [--ignorefiles --i] [--excelfilepath --e]
-                        [--conditionchecker --c] [--splitter --s]
+usage: functiondefextractor [-h] [--path --p] [--annot --a] [--delta --d]
+                            [--funcstartwith --f] [--reportpath --r]
+                            [--ignorefiles --i] [--excelfilepath --e]
+                            [--conditionchecker --c] [--splitter --s]
 
 Function Definition Extractor
 
