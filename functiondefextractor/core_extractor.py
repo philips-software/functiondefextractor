@@ -320,7 +320,7 @@ def process_py_methods(file_name, line_numbers, line_data):
     data_func_name = []
     for i, _ in enumerate(line_numbers):
         start = line_numbers[i]
-        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
+        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1  # pragma: no mutate
         data.append(os.linesep.join(line_data[start - 1:stop]))
         data_func_name.append(str(file_name) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:

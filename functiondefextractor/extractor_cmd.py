@@ -76,7 +76,7 @@ def create_parser(args):
 def validate_inputs(arg_path, repo):
     """This function helps in validating the user inputs"""
     status_path = True if os.path.splitext(arg_path)[1].upper() == ".XLSX" and os.path.exists(arg_path) \
-        else False if repo == "Excel file" else os.path.exists(arg_path)
+        else False if repo == "Excel file" else os.path.exists(arg_path)  # pragma: no mutate
     if status_path:
         LOG.info("Input path validated")  # pragma: no mutate
     if not status_path:
