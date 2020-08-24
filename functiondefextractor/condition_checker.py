@@ -67,8 +67,6 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table = data_table.to_frame()
     data_table = data_table.reset_index()
     data_table = data_table.rename({'index': 'Different %s patterns ' % test_assert}, axis='columns')
-    if data_table.iat[0, 0] == '':  # pragma: no mutate
-        data_table = data_table.drop([data_table.index[0]])  # pragma: no mutate
     if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":  # pragma: no mutate
         writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
                                 % test_assert.strip("@"), engine='xlsxwriter')
