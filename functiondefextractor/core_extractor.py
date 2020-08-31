@@ -23,15 +23,9 @@ def get_file_names(dir_path):
         dir_path: Path to the repository
         @return
         This function returns all the files in the given directory"""
-    listoffile = os.listdir(dir_path)
-    allfiles = list()
-    for entry in listoffile:
-        fullpath = os.path.join(dir_path, entry)
-        if os.path.isdir(fullpath):
-            allfiles = allfiles + get_file_names(fullpath)
-        else:
-            allfiles.append(fullpath)
-    return allfiles
+    path_list = [os.path.join(dirpath, filename) for dirpath, _, filenames in
+                 os.walk(dir_path) for filename in filenames]
+    return path_list
 
 
 def filter_reg_files(allfiles, reg_pattern):
@@ -98,8 +92,11 @@ def process_function_names(func_data, find):
         This function returns list of function names and line numbers"""
     if func_data is not None:
         process_list = re.findall(r'\w+', func_data)
-        val = [index for index, _ in enumerate(process_list) if
-               process_list[index - 1] in find and process_list[index].isdigit()]
+        if find == ["member", "function", "class"]:
+            val = [index for index, _ in enumerate(process_list) if
+                   process_list[index - 1] in find and process_list[index].isdigit()]
+        else:
+            val = process_ctags_output(find, process_list)
         function_list = get_sorted_func_list(process_list, val)
         line_numbers = get_func_line_num_list(process_list, val)
         line_numbers.sort()
@@ -107,6 +104,17 @@ def process_function_names(func_data, find):
         print("Input files doesn't have valid methods")  # pragma: no mutate
         sys.exit(1)  # pragma: no mutate
     return function_list, line_numbers
+
+
+def process_ctags_output(find, process_list):
+    """ This function cleans the ctags output to get function/method names and line numbers
+        @parameters
+        process_list: Ctags output in list format
+        find: keyword of method type(member/function/class/method)
+        @return
+        This function returns list of function names and line numbers"""
+    return [index for index, _ in enumerate(process_list) if
+            process_list[index - 1] == find and process_list[index].isdigit()]
 
 
 def get_sorted_func_list(process_list, val):
@@ -180,12 +188,16 @@ def get_annot_methods(filename, line_num, annot):
         This function returns function/method definitions that has the given annotation"""
     file_content = get_file_content(filename)
     iterator = int(line_num) - 2  # Iterating through lines to check for annotations
-    for _ in range(int(line_num) - 2):
-        data = str(file_content[iterator]).strip()
-        iterator = iterator - 1
-        ret_val = process_annot_method_body(annot, data, filename, line_num)
-        if ret_val != "continue":
-            return ret_val
+    try:
+        for _ in range(int(line_num) - 2):
+            data = str(file_content[iterator]).strip()
+            iterator = iterator - 1
+            ret_val = process_annot_method_body(annot, data, filename, line_num)
+            if ret_val != "continue":
+                return ret_val
+    except IndexError as exc:
+        LOG.info("error while processing file_line: %s", filename + "_" + line_num)  # pragma: no mutate
+        LOG.info(exc)  # pragma: no mutate
 
 
 def process_annotation(annot):
@@ -214,7 +226,10 @@ def process_annot_method_body(annot, data, filename, line_num):
     annot_start, annot_end = process_annotation(annot)
     if annot.strip(annot_start).strip(annot_end).upper() in data.strip(annot_start) \
             .strip(annot_end).upper().split(",") and data.strip().startswith(annot_start):
-        ret_val = data + os.linesep + get_func_body(filename, line_num)
+        body = get_func_body(filename, line_num)
+        if body is None:
+            body = ""
+        ret_val = data + os.linesep + str(body)
     elif data[:1] != "@" and str(data).strip() == "}" or str(data).strip() == "{":  # pragma: no mutate
         ret_val = None  # pragma: no mutate
     return ret_val
@@ -230,8 +245,8 @@ def check_py_annot(file_name, annot):
     line_data = list(
         [line.rstrip() for line in open(file_name, encoding='utf-8', errors='ignore')])  # pragma: no mutate
     val = 1  # pragma: no mutate
-    if annot.upper() == "TEST_":  # Making use of annotation search function for function start with feature too
-        annot = "def test_"  # pragma: no mutate
+    if annot[0] != "@":  # Making use of annotation search function for function start with feature too
+        annot = "def " + annot.lower()  # pragma: no mutate
         val = -1  # pragma: no mutate
     return get_py_annot_method_names(line_data, annot, val)
 
@@ -320,7 +335,7 @@ def process_py_methods(file_name, line_numbers, line_data):
     data_func_name = []
     for i, _ in enumerate(line_numbers):
         start = line_numbers[i]
-        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1  # pragma: no mutate
+        stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
         data.append(os.linesep.join(line_data[start - 1:stop]))
         data_func_name.append(str(file_name) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:

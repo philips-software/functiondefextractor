@@ -1,7 +1,8 @@
 """Koninklijke Philips N.V., 2019 - 2020. All rights reserved."""
 
 import os
-
+import datetime
+import time
 import pandas as pd
 from pandas import DataFrame
 
@@ -67,11 +68,15 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
     data_table = data_table.to_frame()
     data_table = data_table.reset_index()
     data_table = data_table.rename({'index': 'Different %s patterns ' % test_assert}, axis='columns')
+    if data_table.iat[0, 0] == '':  # pragma: no mutate
+        data_table = data_table.drop([data_table.index[0]])  # pragma: no mutate
     if str(type(file_path)) != "<class 'pandas.core.frame.DataFrame'>":  # pragma: no mutate
-        writer = pd.ExcelWriter(os.path.join(os.path.dirname(file_path), 'Pattern_Result_%s.xlsx')
-                                % test_assert.strip("@"), engine='xlsxwriter')
+        file_name = (os.path.join(os.path.dirname(file_path), "Pattern_Result_%s_" +  # pragma: no mutate
+                                  str(datetime.datetime.fromtimestamp(time.time()).strftime(  # pragma: no mutate
+                                      '%H-%M-%S_%d_%m_%Y'))) % test_assert.strip("@"))  # pragma: no mutate
+        writer = pd.ExcelWriter(file_name + ".xlsx", engine='xlsxwriter')  # pragma: no mutate
         data.to_excel(writer, sheet_name='Data')  # pragma: no mutate
-        html_file_path = os.path.join(os.path.dirname(file_path), 'Pivot_table_%s.html') % test_assert.strip("@")
+        html_file_path = file_name + "_Pivot_Table.html"
         data_table.to_excel(writer, sheet_name='Pivot Table')  # pragma: no mutate
         data_table.to_html(html_file_path)
         writer.save()

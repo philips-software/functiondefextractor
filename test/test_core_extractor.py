@@ -90,6 +90,7 @@ class SimpleTest(unittest.TestCase):
         """Function to test the complete end to end process of function definition extractor (True True)"""
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), functionstartwith="test_",
                               report_folder=None)
+        dataframe.to_excel("teee.xlsx")
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
         dataframe["Code"] = dataframe["Code"].str.replace("\r\n", "")
@@ -125,41 +126,22 @@ class SimpleTest(unittest.TestCase):
             if fname.startswith("ExtractedFunc_"):
                 os.remove(os.path.join(my_dir, fname))
 
-    def test_check_condition(self):
-        """Function to test pattern finder function"""
-        res = check_condition("@Test",
-                              os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                           "codeextractor_annot.csv"))
-        self.assertEqual(res, "Enter Valid Excel File")
-        res = check_condition("@Test",
-                              os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                           "Sample.xlsx"))
-        self.assertEqual(res, "Couldn't find Uniq ID column")
-        check_condition("@Test",
-                        os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "codeextractor_annot.xlsx"))
-        df1_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "Pattern_Result.xlsx")).sort_values('Uniq ID')
-        df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                              "Pattern_Result_Test.xlsx")).sort_values('Uniq ID')
-        df1_list["@Test Statements"] = df1_list["@Test Statements"].str.strip()
-        df2_list["@Test Statements"] = df2_list["@Test Statements"].str.strip()
-        self.assertTrue(df1_list["@Test Statements"].equals(df2_list["@Test Statements"]))
-        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_Test.xlsx"))
-        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_Test.html"))
-
     def test_pivot_table(self):
         """Function to test pivot table"""
         res = check_condition("assert",
                               os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_test.xlsx"),
                               "(")
-        df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                                    "Test_Pivot_table_assert.html"))
-        df2_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                                    "Pivot_table_assert.html"))
-        self.assertEqual(res, "Report files successfully generated at input path")
-        self.assertEqual(str(df1_pivot_table[0].columns), str(df2_pivot_table[0].columns))
-        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pattern_Result_assert.xlsx"))
-        os.remove(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "Pivot_table_assert.html"))
+        my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource")
+        for fname in os.listdir(my_dir):
+            if fname.split('.')[-1].upper() == "HTML" and fname.startswith("Pattern_"):
+                df1_pivot_table = pd.read_html(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+                                                            "Test_Pivot_table_assert.html"))
+                df2_pivot_table = pd.read_html(os.path.join(my_dir, fname))
+                self.assertEqual(res, "Report files successfully generated at input path")
+                self.assertEqual(str(df1_pivot_table[0].columns), str(df2_pivot_table[0].columns))
+                os.remove(os.path.join(my_dir, fname))
+            if fname.split('.')[-1].upper() == "XLSX" and fname.startswith("Pattern_Result_"):
+                os.remove(os.path.join(my_dir, fname))
 
     def test_cmd_inputs(self):
         """Function to test command line input validation function"""
@@ -173,7 +155,7 @@ class SimpleTest(unittest.TestCase):
 
     def test_extractor_cmd(self):
         """Function to test command line working"""
-        cmd = 'python -m functiondefextractor.extractor_cmd --p "%s"' \
+        cmd = 'python -m functiondefextractor --p "%s"' \
               % (os.path.join(self.file_path, "test_resource", "test_repo", "test"))
         subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         my_dir = os.path.join(os.path.dirname(__file__), os.pardir, "test_resource", "test_repo", "test")
