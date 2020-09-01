@@ -90,7 +90,6 @@ class SimpleTest(unittest.TestCase):
         """Function to test the complete end to end process of function definition extractor (True True)"""
         dataframe = extractor((os.path.join(self.file_path, "test_resource", "test_repo")), functionstartwith="test_",
                               report_folder=None)
-        dataframe.to_excel("teee.xlsx")
         df2_list = pd.read_excel(os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
                                               "codeextractor_T_T.xlsx"))
         dataframe["Code"] = dataframe["Code"].str.replace("\r\n", "")

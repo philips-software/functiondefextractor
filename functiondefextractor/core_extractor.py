@@ -418,12 +418,17 @@ def get_delta_lines(file_name, annot, delta):
     """ Function to get + and - delta number of lines from the annoted method/function
             @parameters
             filename, annot, delta: Path to the file, required annotation, required lines from method """
-    line_data = list(filter(None, [line.rstrip() for
-                                   line in open(file_name, encoding='utf-8', errors='ignore')]))  # pragma: no mutate
-    data = []
-    for num, line in enumerate(line_data, 1):
-        process_delta_lines_body(annot, line, delta, num, line_data, data, file_name)
+    try:
+        line_data = list(filter(None, [line.rstrip() for
+                                       line in open(file_name, 
+                                       encoding='utf-8', errors='ignore')]))  # pragma: no mutate
         data = []
+        for num, line in enumerate(line_data, 1):
+            process_delta_lines_body(annot, line, delta, num, line_data, data, file_name)
+            data = []
+    except IOError as exc:
+        LOG.info("Cannot read file: %s", file_name)  # pragma: no mutate
+        LOG.info(exc)  # pragma: no mutate
 
 
 def process_delta_lines_body(annot, line, delta, num, line_data, data, file_name):
