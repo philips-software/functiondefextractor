@@ -118,6 +118,15 @@ print(out_put[0], out_put[1])
 >>>python -m functiondefextractor --p "path/to/repo"
 ```
 
+- To extract functions from repo having specific annotation.
+
+```sh
+>>>python -m functiondefextractor --p "path/to/repo" --a "@SuppressWarnings(\"UnusedReturnValue\")"
+```
+
+Note: If annotation contains double quotes as part of annotation(like
+above example) use backslash(\) before double quote inside annotation.
+
 - To ignore files from repo using regex pattern.
 
 ```sh
