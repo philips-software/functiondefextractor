@@ -445,7 +445,7 @@ def process_delta_lines_body(annot, line, delta, num, line_data, data, file_name
                 break
             data.append(line_data[num - (int(delta) + 1) + i])
         DELTA_BODY.append("\n".join(data))
-        UID_LIST.append(os.path.basename(file_name) + "_")
+        UID_LIST.append(file_name + "_")
 
 
 def get_flat_list(data_list):
