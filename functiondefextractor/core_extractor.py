@@ -420,8 +420,8 @@ def get_delta_lines(file_name, annot, delta):
             filename, annot, delta: Path to the file, required annotation, required lines from method """
     try:
         line_data = list(filter(None, [line.rstrip() for
-                                       line in open(file_name, 
-                                       encoding='utf-8', errors='ignore')]))  # pragma: no mutate
+                                       line in
+                                       open(file_name, encoding='utf-8', errors='ignore')]))  # pragma: no mutate
         data = []
         for num, line in enumerate(line_data, 1):
             process_delta_lines_body(annot, line, delta, num, line_data, data, file_name)
