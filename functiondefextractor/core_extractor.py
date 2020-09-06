@@ -640,7 +640,7 @@ def initialize_values(delta, annot, path_loc, report_folder):
     if report_folder is None:
         report_folder = path_loc
     if validate_input_paths(report_folder):
-        return "Enter valid report path"
+        return "Enter valid report path"  # pragma: no mutate
     LOG.info("Input report folder path validated successfully")  # pragma: no mutate
     return report_folder, annot
 
