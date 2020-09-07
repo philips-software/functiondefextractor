@@ -16,7 +16,7 @@ if __name__ == '__main__':
         raise SystemExit
     if ARGS.conditionchecker is None:
         validate_inputs(ARGS.path, "repository")
-        ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath  # pragma: no mutate
+        ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
         validate_inputs(ARGS.reportpath, "report folder")  # pragma: no mutate
         get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath, ARGS.ignorefiles)
                    , ARGS.reportpath)
