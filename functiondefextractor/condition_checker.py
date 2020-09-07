@@ -63,7 +63,7 @@ def get_pivot_table_result(data, test_assert, splitter, file_path):
         splitter: key to split statement in pivot table
         file_path: Input xlsx file used for searching pattern"""
     specifier_column = clean_data(splitter, data)
-    data_frame = DataFrame(specifier_column, columns=['Count'])
+    data_frame = DataFrame(specifier_column, columns=['Count'])  # pragma: no mutate
     data_table = data_frame.Count.value_counts()
     data_table = data_table.to_frame()
     data_table = data_table.reset_index()
