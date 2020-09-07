@@ -193,7 +193,7 @@ def get_annot_methods(filename, line_num, annot):
             data = str(file_content[iterator]).strip()
             iterator = iterator - 1  # pragma: no mutate
             ret_val = process_annot_method_body(annot, data, filename, line_num)
-            if ret_val != "continue":
+            if ret_val != "continue":  # pragma: no mutate
                 return ret_val
     except IndexError as exc:
         LOG.info("error while processing file_line: %s", filename + "_" + line_num)  # pragma: no mutate
