@@ -207,7 +207,7 @@ def process_annotation(annot):
             @return
             This function returns starting and ending character of the annotation"""
     annot_start = annot[0]
-    annot_end = annot[len(annot) - 2]
+    annot_end = annot[len(annot) - 1]
     if annot_end.isalpha():
         annot_end = None  # pragma: no mutate
     return annot_start, annot_end
@@ -291,7 +291,7 @@ def get_func_body(filename, line_num):
                 code += line
 
                 if line.count("{") > 0:
-                    found_start = True
+                    found_start = None
                     cnt_braket += line.count("{")
 
                 if line.count("}") > 0:
