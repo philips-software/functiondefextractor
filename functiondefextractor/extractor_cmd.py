@@ -84,6 +84,6 @@ def validate_inputs(arg_path, repo):
         print("Enter valid %s path" % repo)  # pragma: no mutate
         sys.stdout.flush()
         script = os.path.abspath(os.path.join(os.path.realpath(__file__)))
-        cmd = 'python %s --h' % script
+        cmd = 'python %s --h' % script  # pragma: no mutate
         subprocess.call(cmd, shell=True)  # pragma: no mutate
         sys.exit(1)  # pragma: no mutate
