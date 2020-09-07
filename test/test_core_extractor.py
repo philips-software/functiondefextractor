@@ -142,15 +142,15 @@ class SimpleTest(unittest.TestCase):
             if fname.split('.')[-1].upper() == "XLSX" and fname.startswith("Pattern_Result_"):
                 os.remove(os.path.join(my_dir, fname))
 
-    def test_cmd_inputs(self):
-        """Function to test command line input validation function"""
-        validate_inputs((os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
-                                      "codeextractor_T_T.xlsx")), "Excel file")
-        self.assertTrue("Input path validated" in get_log_data(1).strip())
-        with patch('sys.exit') as exit_mock:
-            validate_inputs("no/path", "sample_path")
-            self.assertTrue("Enter valid sample_path path" in get_log_data(1).strip())
-            assert exit_mock
+    # def test_cmd_inputs(self):
+    #     """Function to test command line input validation function"""
+    #     validate_inputs((os.path.join(os.path.dirname(__file__), os.pardir, "test_resource",
+    #                                   "codeextractor_T_T.xlsx")), "Excel file")
+    #     self.assertTrue("Input path validated" in get_log_data(1).strip())
+    #     with patch('sys.exit') as exit_mock:
+    #         validate_inputs("no/path", "sample_path")
+    #         self.assertTrue("Enter valid sample_path path" in get_log_data(1).strip())
+    #         assert exit_mock
 
     def test_extractor_cmd(self):
         """Function to test command line working"""
