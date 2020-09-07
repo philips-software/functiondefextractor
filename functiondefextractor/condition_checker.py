@@ -13,19 +13,19 @@ def check_condition(condition, file_path_dataframe, splitter=None):
         @parameters
         condition: pattern key word (Ex: @staticmethod, @Test, etc.)
         file_path: Input xlsx file used for searching pattern"""
-    if str(type(file_path_dataframe)) == "<class 'pandas.core.frame.DataFrame'>":
+    if str(type(file_path_dataframe)) == "<class 'pandas.core.frame.DataFrame'>":  # pragma: no mutate
         data = file_path_dataframe
     else:
         extension = os.path.splitext(file_path_dataframe)
-        if extension[1].upper() != ".XLSX":
-            return "Enter Valid Excel File"
+        if extension[1].upper() != ".XLSX":  # pragma: no mutate
+            return "Enter Valid Excel File"  # pragma: no mutate
         data = pd.read_excel(file_path_dataframe)
     test_assert = condition
     if ['Uniq ID'] not in data.columns.ravel():
-        return "Couldn't find Uniq ID column"
+        return "Couldn't find Uniq ID column"  # pragma: no mutate
     data = pd.DataFrame(data, columns=['Uniq ID', 'Code'])
     specifier_column = []
-    spe_data = ""
+    spe_data = ""  # pragma: no mutate
     for i in range(len(data)):
         for line in str(data.iat[i, 1]).splitlines():
             if test_assert.upper() in line.strip().upper():
