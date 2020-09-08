@@ -17,7 +17,7 @@ if __name__ == '__main__':
     if ARGS.conditionchecker is None:
         validate_inputs(ARGS.path, "repository")
         ARGS.reportpath = ARGS.path if ARGS.reportpath is None else ARGS.reportpath
-        validate_inputs(ARGS.reportpath, "report folder")  # pragma: no mutate
+        validate_inputs(ARGS.reportpath, "report folder")
         get_report(extractor(ARGS.path, ARGS.annot, ARGS.delta, ARGS.funcstartwith, ARGS.reportpath, ARGS.ignorefiles)
                    , ARGS.reportpath)
     else:
