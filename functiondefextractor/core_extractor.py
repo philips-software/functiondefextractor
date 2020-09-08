@@ -42,7 +42,7 @@ def filter_reg_files(allfiles, reg_pattern):
     else:
         reg_pattern = reg_pattern.split(",")
         for i in range(len(reg_pattern).__trunc__()):
-            cmd = "{} " + cmd
+            cmd = "{} " + cmd  # pragma: no mutate
             regex.append(fnmatch.translate(reg_pattern[i]))
         cmd = "(" + cmd[:-1].replace(" ", "|") + ")"  # pragma: no mutate
         re_obj = re.compile(cmd.format(*regex))
@@ -193,7 +193,7 @@ def get_annot_methods(filename, line_num, annot):
             data = str(file_content[iterator]).strip()
             iterator = iterator - 1
             ret_val = process_annot_method_body(annot, data, filename, line_num)
-            if ret_val != "continue":
+            if ret_val != "continue":  # pragma: no mutate
                 return ret_val
     except IndexError as exc:
         LOG.info("error while processing file_line: %s", filename + "_" + line_num)  # pragma: no mutate
