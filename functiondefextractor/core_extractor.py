@@ -189,7 +189,7 @@ def get_annot_methods(filename, line_num, annot):
     file_content = get_file_content(filename)
     iterator = int(line_num) - 2  # Iterating through lines to check for annotations
     try:
-        for _ in range(int(line_num) - 2):
+        for _ in range(int(line_num) - 2):  # pragma: no mutate
             data = str(file_content[iterator]).strip()
             iterator = iterator - 1
             ret_val = process_annot_method_body(annot, data, filename, line_num)
@@ -262,13 +262,13 @@ def get_py_annot_method_names(line_data, annot, val):
     data = []
     for i, _ in enumerate(line_data):
         if annot in line_data[i]:
-            if str(line_data[i]).strip().split(" ")[0] == "def":
-                func_name = line_data[i + 1 + val].strip().split(" ")[1].split("(")[0]
+            if str(line_data[i]).strip().split(" ")[0] == "def":  # pragma: no mutate
+                func_name = line_data[i + 1 + val].strip().split(" ")[1].split("(")[0]  # pragma: no mutate
                 data.append(func_name)
             else:
                 for j in range(i, len(line_data)):
-                    if str(line_data[j]).strip().split(" ")[0] == "def":
-                        func_name = line_data[j].strip().split(" ")[1].split("(")[0]
+                    if str(line_data[j]).strip().split(" ")[0] == "def":  # pragma: no mutate
+                        func_name = line_data[j].strip().split(" ")[1].split("(")[0]  # pragma: no mutate
                         data.append(func_name)
                         break
     return data
@@ -336,7 +336,7 @@ def process_py_methods(file_name, line_numbers, line_data):
     for i, _ in enumerate(line_numbers):
         start = line_numbers[i]
         stop = len(line_data) if i == len(line_numbers) - 1 else line_numbers[i + 1] - 1
-        data.append(os.linesep.join(line_data[start - 1:stop]))
+        data.append(os.linesep.join(line_data[start - 1:stop]))  # pragma: no mutate
         data_func_name.append(str(file_name) + "_" + str(line_data[start - 1].strip().split(" ")[1].split("(")[0]))
         if data[len(data) - 1].startswith("class") or "lambda" in data[len(data) - 1]:
             data.remove(data[len(data) - 1])
@@ -407,7 +407,7 @@ def filter_files(list_files):
     This function returns the list of required file(.java, .cpp, .c, .cs, .py) paths """
     local_files = []
     for files in list_files:
-        extension = files.split('.')[-1].upper()
+        extension = files.split('.')[-1].upper()  # pragma: no mutate
         if len(extension).__trunc__() > 0:
             if extension in FILE_TYPE:
                 local_files.append(files)
@@ -640,7 +640,7 @@ def initialize_values(delta, annot, path_loc, report_folder):
     if report_folder is None:
         report_folder = path_loc
     if validate_input_paths(report_folder):
-        return "Enter valid report path"
+        return "Enter valid report path"  # pragma: no mutate
     LOG.info("Input report folder path validated successfully")  # pragma: no mutate
     return report_folder, annot
 
