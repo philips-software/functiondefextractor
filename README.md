@@ -46,6 +46,18 @@ Advantage of using such function extractions are,
 pip install functiondefextractor
 ```
 
+## Run in Docker
+
+There is a Dockerfile, which can be used to run the application. First build the image:
+```sh
+docker build --tag=functiondefextractor:latest .
+```
+
+Then execute the container. This assumes the repo you want to scan is the current working directory (xls files will be generated in the mounted folder)
+```sh
+docker run -it --rm --name functiondefextractor -v ${PWD}/:/usr/bin/code --platform=linux/amd64 functiondefextractor:latest
+```
+
 ## Usage & Configuration
 
 ### Code
